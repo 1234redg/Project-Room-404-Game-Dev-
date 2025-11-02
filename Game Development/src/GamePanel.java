@@ -1,4 +1,4 @@
-package Main;
+
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -12,12 +12,12 @@ import Entity.Player;
 public class GamePanel extends JPanel implements Runnable{
 	
 	//SCREEN SETTINGS
-	final int originalTileSize = 16; //Each tile is 16x16 || default size of any player character map tiles and etc.
-	final int scale = 3;             //Scale tiles up to make them larger
+	final int originalTileSize = 16; // 16x16 tile - default size of any player character map tiles and etc.
+	final int scale = 3;             //SCALE THE ORIGINAL TILE SIZE
 	
-	public final int tileSize =  originalTileSize * scale; // Each tile = 48x48 pixels
-	final int maxScreenCol = 16;//Number of columns (width)
-	final int maxScreenRow = 12;// Number of rows (height)
+	public final int tileSize =  originalTileSize * scale; // 48x48 tile
+	final int maxScreenCol = 16;
+	final int maxScreenRow = 12;
 	
 	//GAME SCREEN SIZE
 	final int screenWidth = tileSize * maxScreenCol; // 768 pixels
@@ -26,28 +26,28 @@ public class GamePanel extends JPanel implements Runnable{
 	//FPS (Frames Per Second)
 	int FPS = 60;
 	
-	KeyHandler keyH = new KeyHandler();//Keyboard input
-	Thread gameThread;//Runs the game loop in a separate thread
-	Player player = new Player(this,keyH);//The player object
+	KeyHandler keyH = new KeyHandler();
+	Thread gameThread;
+	Player player = new Player(this,keyH);
 	
 	//Set player's default position
-	int playerX = 100;//Starting X position
-	int playerY = 100; // Starting Y position
-	int playerSpeed = 4;// MOVEMENT SPEED
+	int playerX = 100;
+	int playerY = 100;
+	int playerSpeed = 4;
 	
 	public GamePanel() {
 		
-		this.setPreferredSize(new Dimension(screenWidth, screenHeight));// Set panel size
-		this.setBackground(Color.black);// Background color
-		this.setDoubleBuffered(true);// Smooth graphics rendering
-		this.addKeyListener(keyH);//Listen for key inputs
-		this.setFocusable(true);//Make sure GamePanel receives key input
+		this.setPreferredSize(new Dimension(screenWidth, screenHeight));
+		this.setBackground(Color.black);
+		this.setDoubleBuffered(true);
+		this.addKeyListener(keyH);
+		this.setFocusable(true);
 	}
 
 	public void startGameThread() {
 		
-		gameThread = new Thread(this);// Create a new thread for the game
-		gameThread.start(); // Start running the game loop
+		gameThread = new Thread(this);
+		gameThread.start();
 	}
 	
 	@Override
@@ -72,9 +72,9 @@ public class GamePanel extends JPanel implements Runnable{
 					remainingTime = 0;
 				}
 				
-				Thread.sleep((long)remainingTime);// Pause until next frame
+				Thread.sleep((long)remainingTime);
 				
-				nextDrawTime += drawInterval;// Schedule next frame
+				nextDrawTime += drawInterval;
 				
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block

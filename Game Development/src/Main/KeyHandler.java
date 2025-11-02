@@ -5,6 +5,7 @@ import java.awt.event.KeyListener;
 
 public class KeyHandler implements KeyListener{
 	
+	// Boolean flags for movement
 	public boolean upPressed, downPressed, leftPressed, rightPressed;
 
 	@Override
@@ -14,7 +15,7 @@ public class KeyHandler implements KeyListener{
 	@Override
 	public void keyPressed(KeyEvent e) {
 		
-		int code = e.getKeyCode();
+		int code = e.getKeyCode();// Get the key code of the pressed key
 		
 		if(code == KeyEvent.VK_W) {
 			upPressed = true;
@@ -35,8 +36,9 @@ public class KeyHandler implements KeyListener{
 	@Override
 	public void keyReleased(KeyEvent e) {
 
-		int code = e.getKeyCode();
+		int code = e.getKeyCode();// Get key code when released
 		
+		// Reset key flags to false when keys are released
 		if(code == KeyEvent.VK_W) {
 			upPressed = false;
 		}

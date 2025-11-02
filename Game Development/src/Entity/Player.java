@@ -13,23 +13,23 @@ import Main.KeyHandler;
 
 public class Player extends Entity{
 	
-	GamePanel gp;
-	KeyHandler keyH;
+	GamePanel gp; // Reference to the GamePanel
+	KeyHandler keyH;// Handles input
 	
 	public Player(GamePanel gp, KeyHandler keyH) {
 		
 		this.gp = gp;
 		this.keyH = keyH;
 		
-		setDefaultValues();
-		getPlayerImage();
+		setDefaultValues();// Set initial values for player
+		getPlayerImage();// Load character sprites
 	}
 	public void setDefaultValues() {
 		
 		x = 100;
 		y = 100;
-		speed = 4;
-		direction = "down";
+		speed = 4;// Movement speed
+		direction = "down";//Default facing direction
 	}
 	
 	public void getPlayerImage() {
