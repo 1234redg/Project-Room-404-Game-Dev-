@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import java.io.File;
 
 import Main.GamePanel;
 import Main.KeyHandler;
@@ -29,22 +30,22 @@ public class Player extends Entity{
 		x = 100;
 		y = 100;
 		speed = 4;// Movement speed
-		direction = "down";//Default facing direction
+		direction = "down";//default facing
 	}
 	
 	public void getPlayerImage() {
 		
 		try {
 			//Load images here
-			up1 = ImageIO.read(getClass().getResourceAsStream("/player/boy_up_1.png"));
-			up2 = ImageIO.read(getClass().getResourceAsStream("/player/boy_up_2.png"));
-			down1 = ImageIO.read(getClass().getResourceAsStream("/player/boy_down_1.png"));
-			down2 = ImageIO.read(getClass().getResourceAsStream("/player/boy_down_2.png"));
-			left1 = ImageIO.read(getClass().getResourceAsStream("/player/boy_left_1.png"));
-			left2 = ImageIO.read(getClass().getResourceAsStream("/player/boy_left_2.png"));
-			right1 = ImageIO.read(getClass().getResourceAsStream("/player/boy_right_1.png"));
-			right2 = ImageIO.read(getClass().getResourceAsStream("/player/boy_right_2.png"));
-			
+			up1 = ImageIO.read(new File("C:/Users/User/git/repository/Game Development/res/player/1.png"));
+			up2 = ImageIO.read(new File("C:/Users/User/git/repository/Game Development/res/player/2.png"));
+			down1 = ImageIO.read(new File("C:/Users/User/git/repository/Game Development/res/player/3.png"));
+			down2 = ImageIO.read(new File("C:/Users/User/git/repository/Game Development/res/player/4.png"));
+			left1 = ImageIO.read(new File("C:/Users/User/git/repository/Game Development/res/player/5.png"));
+			left2 = ImageIO.read(new File("C:/Users/User/git/repository/Game Development/res/player/6.png"));
+			right1 = ImageIO.read(new File("C:/Users/User/git/repository/Game Development/res/player/7.png"));
+			right2 = ImageIO.read(new File("C:/Users/User/git/repository/Game Development/res/player/8.png"));
+
 		}catch(IOException e) {
 			e.printStackTrace();
 		}
@@ -125,7 +126,7 @@ public class Player extends Entity{
 			}
 			break;
 		}
-		g2.drawImage(image, x, y, gp.tileSize, gp.tileSize, null);
+		g2.drawImage(image, x, y, gp.tileSize, gp.tileSize + 30, null);
 	}
 }
 

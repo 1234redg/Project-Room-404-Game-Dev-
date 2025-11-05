@@ -7,6 +7,7 @@ import java.awt.Graphics2D;
 import javax.swing.JPanel;
 
 import Entity.Player;
+import tile.TileManager;
 
 //Game Panel - works as the GAME SCREEN
 public class GamePanel extends JPanel implements Runnable{
@@ -16,29 +17,27 @@ public class GamePanel extends JPanel implements Runnable{
 	final int scale = 3;             //Scale tiles up to make them larger
 	
 	public final int tileSize =  originalTileSize * scale; // Each tile = 48x48 pixels
-	final int maxScreenCol = 16;//Number of columns (width)
-	final int maxScreenRow = 12;// Number of rows (height)
+	public final int maxScreenCol = 16;//Number of columns (width)
+	public final int maxScreenRow = 12;// Number of rows (height)
 	
 	//GAME SCREEN SIZE
-	final int screenWidth = tileSize * maxScreenCol; // 768 pixels
-	final int screenHeight = tileSize * maxScreenRow; // 576 pixels
+	public final int screenWidth = tileSize * maxScreenCol; // 768 pixels
+	public final int screenHeight = tileSize * maxScreenRow; // 576 pixels
 	
 	//FPS (Frames Per Second)
 	int FPS = 60;
 	
+	
+	TileManager tileM = new TileManager(this);
 	KeyHandler keyH = new KeyHandler();//Keyboard input
 	Thread gameThread;//Runs the game loop in a separate thread
 	Player player = new Player(this,keyH);//The player object
 	
-	//Set player's default position
-	int playerX = 100;//Starting X position
-	int playerY = 100; // Starting Y position
-	int playerSpeed = 4;// MOVEMENT SPEED
 	
 	public GamePanel() {
 		
 		this.setPreferredSize(new Dimension(screenWidth, screenHeight));// Set panel size
-		this.setBackground(Color.black);// Background color
+		this.setBackground(Color.black );// Background color
 		this.setDoubleBuffered(true);// Smooth graphics rendering
 		this.addKeyListener(keyH);//Listen for key inputs
 		this.setFocusable(true);//Make sure GamePanel receives key input
@@ -92,6 +91,8 @@ public class GamePanel extends JPanel implements Runnable{
 		super.paintComponent(g);
 		
 		Graphics g2 = (Graphics2D)g;
+		
+		tileM.draw(g2);
 		
 		player.draw(g2);
 		
