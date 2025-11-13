@@ -1,6 +1,7 @@
 package Entity;
 
 import java.awt.Graphics;
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 
@@ -24,6 +25,13 @@ public class Player extends Entity {
         //Move screen along with the movement of the player
         screenX = gp.screenWidth/2 - (gp.tileSize/2);
         screenY = gp.screenHeight/2 - (gp.tileSize/2);
+        
+        //the solid area size in the character
+        solidArea = new Rectangle();
+        solidArea.x = 8;
+        solidArea.y = 16;
+        solidArea.width = 32;
+        solidArea.height = 32;
 
         setDefaultValues();
         getPlayerImage();
@@ -85,20 +93,39 @@ public class Player extends Entity {
         if (keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed) {
             
             if (keyH.upPressed) {
-                direction = "up";
-                worldY -= speed;
+                direction = "up";               
             } 
             else if (keyH.downPressed) {
-                direction = "down";
-                worldY += speed;
+                direction = "down";             
             } 
             else if (keyH.leftPressed) {
-                direction = "left";
-                worldX -= speed;
+                direction = "left";                
             } 
             else if (keyH.rightPressed) {
-                direction = "right";
-                worldX += speed;
+                direction = "right";                
+            }
+            
+            
+            //CHECK TILE COLLISION 
+            collisionOn = false;
+            gp.Checker.checkTile(this);
+            // if collision is false player can move
+            if(collisionOn == false) {
+            	
+            	switch(direction) {
+            	case "up":
+            		worldY -= speed;
+            		break;
+            	case "down":
+            		 worldY += speed;
+            		break;
+            	case "left": 
+            		worldX -= speed;
+            		break;
+            	case "right":
+            		worldX += speed;
+            		break;
+            	}
             }
 
             spriteCounter++;

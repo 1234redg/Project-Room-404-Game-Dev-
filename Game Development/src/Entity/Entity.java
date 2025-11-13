@@ -1,5 +1,6 @@
 package Entity;
 
+import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 
 public class Entity {
@@ -16,4 +17,7 @@ public class Entity {
 	
 	public int spriteCounter = 0;// Counts frames for switching sprites
 	public int spriteNum = 1;// Chooses which sprite frame to show
+	
+	public Rectangle solidArea;
+	public boolean collisionOn = false; 
 }
