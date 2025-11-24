@@ -4,9 +4,7 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-
 import javax.imageio.ImageIO;
-
 import Main.GamePanel;
 import Main.KeyHandler;
 
@@ -14,40 +12,41 @@ public class Player extends Entity {
 
     GamePanel gp;
     KeyHandler keyH;
-    
+
     public final int screenX;
     public final int screenY;
 
     public Player(GamePanel gp, KeyHandler keyH) {
         this.gp = gp;
         this.keyH = keyH;
-        
-        //Move screen along with the movement of the player
-        screenX = gp.screenWidth/2 - (gp.tileSize/2);
-        screenY = gp.screenHeight/2 - (gp.tileSize/2);
-        
-        //the solid area size in the character
+
+        // Move screen along with player
+        screenX = gp.screenWidth / 2 - (gp.tileSize / 2);
+        screenY = gp.screenHeight / 2 - (gp.tileSize / 2);
+
+        // Solid area for collision
         solidArea = new Rectangle();
-        solidArea.x = 8;
-        solidArea.y = 16;
-        solidArea.width = 32;
+        solidArea.x = 4;
+        solidArea.y = 8;
+        solidArea.width = 25;
         solidArea.height = 32;
 
         setDefaultValues();
         getPlayerImage();
     }
 
+    // Player starting location and speed
     public void setDefaultValues() {
-    	
-    	//Location sa player || Starting point
-        worldX = gp.tileSize * 23;
+        worldX = gp.tileSize * 38;
         worldY = gp.tileSize * 21;
         speed = 10;
         direction = "down";
     }
 
+    // Load all player sprites
     public void getPlayerImage() {
         try {
+            // Down sprites
             down1 = ImageIO.read(getClass().getResourceAsStream("/player/1n.png"));
             down2 = ImageIO.read(getClass().getResourceAsStream("/player/2n.png"));
             down3 = ImageIO.read(getClass().getResourceAsStream("/player/3n.png"));
@@ -57,6 +56,7 @@ public class Player extends Entity {
             down7 = ImageIO.read(getClass().getResourceAsStream("/player/7n.png"));
             down8 = ImageIO.read(getClass().getResourceAsStream("/player/8n.png"));
 
+            // Right sprites
             right1 = ImageIO.read(getClass().getResourceAsStream("/player/1ws.png"));
             right2 = ImageIO.read(getClass().getResourceAsStream("/player/2ws.png"));
             right3 = ImageIO.read(getClass().getResourceAsStream("/player/3ws.png"));
@@ -66,6 +66,7 @@ public class Player extends Entity {
             right7 = ImageIO.read(getClass().getResourceAsStream("/player/7ws.png"));
             right8 = ImageIO.read(getClass().getResourceAsStream("/player/8ws.png"));
 
+            // Up sprites
             up1 = ImageIO.read(getClass().getResourceAsStream("/player/1wb.png"));
             up2 = ImageIO.read(getClass().getResourceAsStream("/player/2wb.png"));
             up3 = ImageIO.read(getClass().getResourceAsStream("/player/3wb.png"));
@@ -75,6 +76,7 @@ public class Player extends Entity {
             up7 = ImageIO.read(getClass().getResourceAsStream("/player/7wb.png"));
             up8 = ImageIO.read(getClass().getResourceAsStream("/player/8wb.png"));
 
+            // Left sprites
             left1 = ImageIO.read(getClass().getResourceAsStream("/player/1wc.png"));
             left2 = ImageIO.read(getClass().getResourceAsStream("/player/2wc.png"));
             left3 = ImageIO.read(getClass().getResourceAsStream("/player/3wc.png"));
@@ -89,79 +91,74 @@ public class Player extends Entity {
         }
     }
 
+    // --- Updated Player Movement with Predictive Collision ---
     public void update() {
         if (keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed) {
-            
-            if (keyH.upPressed) {
-                direction = "up";               
-            } 
-            else if (keyH.downPressed) {
-                direction = "down";             
-            } 
-            else if (keyH.leftPressed) {
-                direction = "left";                
-            } 
-            else if (keyH.rightPressed) {
-                direction = "right";                
-            }
-            
-            
-            //CHECK TILE COLLISION 
-            collisionOn = false;
-            gp.Checker.checkTile(this);
-            // if collision is false player can move
-            if(collisionOn == false) {
-            	
-            	switch(direction) {
-            	case "up":
-            		worldY -= speed;
-            		break;
-            	case "down":
-            		 worldY += speed;
-            		break;
-            	case "left": 
-            		worldX -= speed;
-            		break;
-            	case "right":
-            		worldX += speed;
-            		break;
-            	}
+
+            // Determine current direction
+            if (keyH.upPressed) direction = "up";
+            else if (keyH.downPressed) direction = "down";
+            else if (keyH.leftPressed) direction = "left";
+            else if (keyH.rightPressed) direction = "right";
+
+            // Predict next position
+            int nextX = worldX;
+            int nextY = worldY;
+
+            switch (direction) {
+                case "up": nextY -= speed; break;
+                case "down": nextY += speed; break;
+                case "left": nextX -= speed; break;
+                case "right": nextX += speed; break;
             }
 
-            spriteCounter++;
-            if (spriteCounter > 7) {
-                spriteNum++;
-                if (spriteNum > 8) {
-                    spriteNum = 1;
+            // Save current position
+            int oldX = worldX;
+            int oldY = worldY;
+
+            // Temporarily move for collision check
+            worldX = nextX;
+            worldY = nextY;
+
+            collisionOn = false;
+
+            // Check collisions
+            gp.Checker.checkTile(this);
+            gp.Checker.checkObject(this, gp.obj);
+
+            // Revert if collision detected
+            if (collisionOn) {
+                worldX = oldX;
+                worldY = oldY;
+            }
+
+            // Animate sprite only if moved
+            if (!collisionOn) {
+                spriteCounter++;
+                if (spriteCounter > 7) {
+                    spriteNum++;
+                    if (spriteNum > 8) spriteNum = 1;
+                    spriteCounter = 0;
                 }
-                spriteCounter = 0;
             }
         }
     }
 
-
+    // Draw player sprite
     public void draw(Graphics g2) {
         BufferedImage image = null;
 
         switch (direction) {
-            case "up":
-                image = selectFrame(up1, up2, up3, up4, up5, up6, up7, up8);
-                break;
-            case "down":
-                image = selectFrame(down1, down2, down3, down4, down5, down6, down7, down8);
-                break;
-            case "left":
-                image = selectFrame(left1, left2, left3, left4, left5, left6, left7, left8);
-                break;
-            case "right":
-                image = selectFrame(right1, right2, right3, right4, right5, right6, right7, right8);
-                break;
+            case "up": image = selectFrame(up1, up2, up3, up4, up5, up6, up7, up8); break;
+            case "down": image = selectFrame(down1, down2, down3, down4, down5, down6, down7, down8); break;
+            case "left": image = selectFrame(left1, left2, left3, left4, left5, left6, left7, left8); break;
+            case "right": image = selectFrame(right1, right2, right3, right4, right5, right6, right7, right8); break;
         }
 
-        // Use worldX and worldY instead of x, y
         g2.drawImage(image, screenX, screenY, gp.tileSize, gp.tileSize + 15, null);
     }
 
+    // Select the current frame for animation
     private BufferedImage selectFrame(BufferedImage... frames) {
         if (spriteNum < 1 || spriteNum > frames.length) spriteNum = 1;
         return frames[spriteNum - 1];

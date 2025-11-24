@@ -7,6 +7,7 @@ import java.awt.Graphics2D;
 import javax.swing.JPanel;
 
 import Entity.Player;
+import object.SuperObject;
 import tile.TileManager;
 
 //Game Panel - works as the GAME SCREEN
@@ -39,7 +40,10 @@ public class GamePanel extends JPanel implements Runnable{
 	KeyHandler keyH = new KeyHandler();//Keyboard input
 	Thread gameThread;//Runs the game loop in a separate thread
 	public collisionChecker Checker = new collisionChecker(this);
+	public AssetSetter set = new AssetSetter(this);
 	public Player player = new Player(this,keyH);//The player object
+	public SuperObject obj[] = new SuperObject[50];// objects in the game
+	
 	
 	
 	public GamePanel() {
@@ -49,6 +53,10 @@ public class GamePanel extends JPanel implements Runnable{
 		this.setDoubleBuffered(true);// Smooth graphics rendering
 		this.addKeyListener(keyH);//Listen for key inputs
 		this.setFocusable(true);//Make sure GamePanel receives key input
+	}
+	
+	public void SetUpGame() {
+		set.setObjects();
 	}
 
 	public void startGameThread() {
@@ -84,7 +92,7 @@ public class GamePanel extends JPanel implements Runnable{
 				nextDrawTime += drawInterval;// Schedule next frame
 				
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
+				// TODO Auto-generated catch block 
 				e.printStackTrace();
 			}
 		}
@@ -98,10 +106,21 @@ public class GamePanel extends JPanel implements Runnable{
 		
 		super.paintComponent(g);
 		
-		Graphics g2 = (Graphics2D)g;
-		
+		Graphics2D g2 = (Graphics2D)g;
+		//TILE
 		tileM.draw(g2);
 		
+		
+		//OBJECT
+		for(int i = 0; i < obj.length; i++) {
+			if(obj[i] != null) {
+				obj[i].Draw(g2, this);
+			
+			}
+		}
+		
+		
+		//PLAYER
 		player.draw(g2);
 		
 		g2.dispose();
