@@ -17,6 +17,7 @@ public class Player extends Entity {
     public final int screenY;
 
     public Player(GamePanel gp, KeyHandler keyH) {
+    		super(gp); 
         this.gp = gp;
         this.keyH = keyH;
 
@@ -28,6 +29,8 @@ public class Player extends Entity {
         solidArea = new Rectangle();
         solidArea.x = 4;
         solidArea.y = 8;
+        solidAreaDefaultX = solidArea.x;
+        solidAreaDefaultY = solidArea.y;
         solidArea.width = 25;
         solidArea.height = 32;
 
@@ -91,7 +94,7 @@ public class Player extends Entity {
         }
     }
 
-    // --- Updated Player Movement with Predictive Collision ---
+    // --- Updated Player Movement 
     public void update() {
         if (keyH.upPressed || keyH.downPressed || keyH.leftPressed || keyH.rightPressed) {
 
@@ -125,6 +128,10 @@ public class Player extends Entity {
             // Check collisions
             gp.Checker.checkTile(this);
             gp.Checker.checkObject(this, gp.obj);
+            
+            // check npc collision
+            int npcIndex = gp.Checker.checkEntity(this, gp.npc);
+            interactNPC(npcIndex);
 
             // Revert if collision detected
             if (collisionOn) {
@@ -142,6 +149,20 @@ public class Player extends Entity {
                 }
             }
         }
+    }
+    
+    public void interactNPC(int i ) {
+    	if(i != 999) {
+    		 
+    		if(gp.keyH.enterPressed == true) {
+    			 gp.gameState = gp.dialogueState;
+        		 gp.npc[i].speak();
+    		}
+    		
+    		
+    	}
+    	gp.keyH.enterPressed = false;
+    	
     }
 
     // Draw player sprite

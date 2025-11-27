@@ -11,14 +11,14 @@ public class Obj_Scabinet extends SuperObject {
 	    name = "Scabinet";
 
 	    try {
-	        image = ImageIO.read(getClass().getResourceAsStream("/objects/Group 54.png"));
+	        image = ImageIO.read(getClass().getResourceAsStream("/objects/Group 95.png"));
 	    } catch (IOException e) {
 	        e.printStackTrace();
 	    }
 
 	    // adjust the size of the objects
-	    width = 150;
-	    height = 350;
+	    width = 770;
+	    height = 200;
 	}
 
 }

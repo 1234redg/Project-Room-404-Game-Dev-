@@ -12,9 +12,11 @@ public class SuperObject {
     public String name;
     public boolean collision = false; // true if object blocks movement
     public int worldX, worldY;
+    public int solidAreaDefaultX = 0;
+    public int solidAreaDefaultY = 0;
 
-    public int width = 48;   // object width
-    public int height = 48;  // object height
+    public int width = 32;   // object width
+    public int height = 32;  // object height
 
     // Collision hitbox
     public Rectangle solidArea;
