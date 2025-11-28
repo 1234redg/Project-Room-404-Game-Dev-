@@ -1,11 +1,8 @@
 package Main;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-
+import java.awt.*;
 import javax.swing.JPanel;
+import javax.swing.event.MouseInputAdapter;
 
 import Entity.Entity;
 import Entity.Player;
@@ -14,131 +11,165 @@ import tile.TileManager;
 
 public class GamePanel extends JPanel implements Runnable {
 
+    // -------------------- TILE SETTINGS --------------------
+    final int originalTileSize = 16;
+    final int scale = 3;
+    public final int tileSize = originalTileSize * scale;
 
-// SCREEN SETTINGS  
-final int originalTileSize = 16;  
-final int scale = 3;  
-public final int tileSize = originalTileSize * scale;  
-public final int maxScreenCol = 20;  
-public final int maxScreenRow = 15;  
-public final int screenWidth = tileSize * maxScreenCol;  
-public final int screenHeight = tileSize * maxScreenRow;  
+    // -------------------- SCREEN SETTINGS --------------------
+    Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
+    public int screenWidth = screen.width;
+    public int screenHeight = screen.height;
 
-// WORLD SETTINGS  
-public final int maxWorldCol = 65;  
-public final int maxWorldRow = 77;  
-public final int worldWidth = tileSize * maxWorldCol;  
-public final int worldHeight = tileSize * maxWorldRow;  
+    public final int maxScreenCol = screenWidth / tileSize;
+    public final int maxScreenRow = screenHeight / tileSize;
 
-// FPS  
-int FPS = 60;  
+    // -------------------- WORLD SETTINGS --------------------
+    public final int maxWorldCol = 65;
+    public final int maxWorldRow = 77;
+    public final int worldWidth = tileSize * maxWorldCol;
+    public final int worldHeight = tileSize * maxWorldRow;
 
-TileManager tileM = new TileManager(this);  
-public KeyHandler keyH = new KeyHandler(this);  
-Thread gameThread;  
-public collisionChecker Checker = new collisionChecker(this);  
-public AssetSetter set = new AssetSetter(this);  
-public Player player = new Player(this, keyH);  
-public SuperObject obj[] = new SuperObject[100];  
-public Entity npc[] = new Entity[32];  
-public GameUI ui = new GameUI(this);
+    // -------------------- GAME LOOP --------------------
+    int FPS = 60;
 
-// Game state  
-  
-public final int playState = 1;  
-public final int pauseState = 2;  
-public final int dialogueState = 3;  
-public int gameState = playState;
+    TileManager tileM = new TileManager(this);
+    public KeyHandler keyH = new KeyHandler(this);
+    Thread gameThread;
+    public collisionChecker Checker = new collisionChecker(this);
+    public AssetSetter set = new AssetSetter(this);
+    public Player player = new Player(this, keyH);
+    public SuperObject obj[] = new SuperObject[100];
+    public Entity npc[] = new Entity[32];
+    public GameUI ui = new GameUI(this);
 
-public int currentNPC = -1; // index of NPC being interacted with  
+    // -------------------- POPUP --------------------
+    public Popup popup;
 
-public GamePanel() {  
-    this.setPreferredSize(new Dimension(screenWidth, screenHeight));  
-    this.setBackground(Color.black);  
-    this.setDoubleBuffered(true);  
-    this.addKeyListener(keyH);  
-    this.setFocusable(true);  
-}  
+    // -------------------- GAME STATES --------------------
+    public final int playState = 1;
+    public final int pauseState = 2;
+    public final int dialogueState = 3;
+    public int gameState = playState;
 
-public void SetUpGame() {  
-    set.setObjects();  
-    set.setNPC();  
-    gameState = playState;  
-}  
+    public int currentNPC = -1;
 
-public void startGameThread() {  
-    gameThread = new Thread(this);  
-    gameThread.start();  
-}  
+    // -------------------- CONSTRUCTOR --------------------
+    public GamePanel() {
+        this.setPreferredSize(new Dimension(screenWidth, screenHeight));
+        this.setBackground(Color.black);
+        this.setDoubleBuffered(true);
+        this.addKeyListener(keyH);
+        this.setFocusable(true);
 
-@Override  
-public void run() {  
-    double drawInterval = 1000000000.0 / FPS;  
-    double nextDrawTime = System.nanoTime() + drawInterval;  
+        // Initialize popup (loads Intro1.png)
+        popup = new Popup(screenWidth, screenHeight, "/MurderRoomMaps/Intro1.png");
 
-    while (gameThread != null) {  
-        update();  
-        repaint();  
+        // MOUSE LISTENERS FOR POPUP
+        MouseInputAdapter mouseHandler = new MouseInputAdapter() {
+            @Override
+            public void mousePressed(java.awt.event.MouseEvent e) {
+                if (popup != null) {
+                    popup.handleClick(e.getX(), e.getY());
+                }
+            }
 
-        try {  
-            double remainingTime = nextDrawTime - System.nanoTime();  
-            remainingTime = remainingTime / 1000000;  
-            if (remainingTime < 0) remainingTime = 0;  
-            Thread.sleep((long) remainingTime);  
-            nextDrawTime += drawInterval;  
-        } catch (InterruptedException e) {  
-            e.printStackTrace();  
-        }  
-    }  
-}  
+            @Override
+            public void mouseMoved(java.awt.event.MouseEvent e) {
+                if (popup != null) {
+                    popup.handleHover(e.getX(), e.getY());
+                }
+            }
+        };
 
-public void update() {  
-    if (gameState == playState) {  
-    	//player
-        player.update();  
-        //npc
-        for(int i = 0; i< npc.length; i++) {
-        		if(npc[i] != null) {
-        			npc[i].update();
-        		}
+        this.addMouseListener(mouseHandler);
+        this.addMouseMotionListener(mouseHandler);
+    }
+
+    // -------------------- GAME SETUP --------------------
+    public void SetUpGame() {
+        set.setObjects();
+        set.setNPC();
+        gameState = playState;
+    }
+
+    public void startGameThread() {
+        gameThread = new Thread(this);
+        gameThread.start();
+    }
+
+    // -------------------- GAME LOOP --------------------
+    @Override
+    public void run() {
+        double drawInterval = 1000000000.0 / FPS;
+        double nextDrawTime = System.nanoTime() + drawInterval;
+
+        while (gameThread != null) {
+            update();
+            repaint();
+
+            try {
+                double remainingTime = nextDrawTime - System.nanoTime();
+                remainingTime /= 1_000_000;
+
+                if (remainingTime < 0) remainingTime = 0;
+
+                Thread.sleep((long) remainingTime);
+                nextDrawTime += drawInterval;
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
-    
-    if(gameState == pauseState) {
-    	
+
+    // -------------------- UPDATE --------------------
+    public void update() {
+
+        // Update popup FIRST
+        if (popup != null) {
+            popup.update();
+        }
+
+        // Game updates
+        if (gameState == playState) {
+            player.update();
+
+            for (int i = 0; i < npc.length; i++) {
+                if (npc[i] != null) npc[i].update();
+            }
+        }
     }
 
-        
-}  
+    // -------------------- RENDER --------------------
+    @Override
+    public void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        Graphics2D g2 = (Graphics2D) g;
 
-   
-public void paintComponent(Graphics g) {  
-    super.paintComponent(g);  
-    Graphics2D g2 = (Graphics2D) g;  
+        // Draw tiles
+        tileM.draw(g2);
 
-    // Tiles  
-    tileM.draw(g2);  
+        // Draw objects
+        for (SuperObject o : obj) {
+            if (o != null) o.Draw(g2, this);
+        }
 
-    // Objects  
-    for (SuperObject o : obj) {  
-        if (o != null) o.Draw(g2, this);  
-    }   
+        // Draw NPCs
+        for (Entity n : npc) {
+            if (n != null) n.draw(g2);
+        }
 
-    // NPCs  
-    for(int i = 0; i < npc.length; i++){
-    		if(npc[i] != null) {
-    			npc[i].draw(g2);
-    		}
+        // Draw player
+        player.draw(g2);
+
+        // Draw UI
+        ui.draw(g2);
+
+        // -------------------- DRAW POPUP LAST --------------------
+        if (popup != null) {
+            popup.draw(g2);
+        }
+
+        g2.dispose();
     }
-
-    // Player  
-    player.draw(g2);  
-
-    // Dialogue UI  
-   ui.draw(g2);
-
-    g2.dispose();  
-}  
-
-
 }
