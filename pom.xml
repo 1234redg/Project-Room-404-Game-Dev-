@@ -3,4 +3,71 @@
   <groupId>Project-Room-404-Game-Dev-</groupId>
   <artifactId>Project-Room-404-Game-Dev-</artifactId>
   <version>0.0.1-SNAPSHOT</version>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <build>
+    <!-- Use the existing top-level `src` directory as the Java source root -->
+    <sourceDirectory>src</sourceDirectory>
+
+    <!-- Include game assets and other resource files so they're available on the classpath -->
+    <resources>
+      <resource>
+        <directory>Game Development/res</directory>
+      </resource>
+      <resource>
+        <directory>src</directory>
+        <includes>
+          <include>**/*.properties</include>
+          <include>**/*.txt</include>
+          <include>**/*.xml</include>
+          <include>**/*.png</include>
+          <include>**/*.jpg</include>
+        </includes>
+      </resource>
+    </resources>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>build-helper-maven-plugin</artifactId>
+        <version>3.3.0</version>
+        <executions>
+          <execution>
+            <id>add-game-development-src</id>
+            <phase>generate-sources</phase>
+            <goals>
+              <goal>add-source</goal>
+            </goals>
+            <configuration>
+              <sources>
+                <source>Game Development/src</source>
+              </sources>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.4.1</version>
+        <executions>
+          <execution>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <createDependencyReducedPom>true</createDependencyReducedPom>
+              <transformers>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                  <mainClass>Main.Main</mainClass>
+                </transformer>
+              </transformers>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
 </project>

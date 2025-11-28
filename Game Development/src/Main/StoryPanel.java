@@ -66,10 +66,10 @@ public class StoryPanel extends JPanel implements ActionListener, KeyListener {
                 repaint();
             } else {
                 textFinished = true;
-
                 if (index == images.length - 1) {
                     lastScreen = true;
                 }
+                repaint();
             }
         }
     }
@@ -120,12 +120,14 @@ public class StoryPanel extends JPanel implements ActionListener, KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        if (lastScreen && e.getKeyCode() == KeyEvent.VK_ENTER) {
-            startGame();
-            return;
-        }
-
         if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+            // If on last screen and text is finished, transition to game
+            if (lastScreen && textFinished) {
+                startGame();
+                return;
+            }
+
+            // Otherwise, handle story progression
             if (!textFinished) {
                 currentText = currentStory;
                 textFinished = true;
@@ -138,7 +140,12 @@ public class StoryPanel extends JPanel implements ActionListener, KeyListener {
 
     private void nextStory() {
         index++;
-        if (index >= images.length) return;
+
+        if (index >= images.length) {
+            index = images.length - 1;
+            lastScreen = true;
+            return;
+        }
 
         if (index == images.length - 1) {
             lastScreen = true;
