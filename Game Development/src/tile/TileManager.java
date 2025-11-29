@@ -1,7 +1,6 @@
 package tile;
 
 import java.awt.Graphics;
-import java.awt.Rectangle; // Added for collision bounds
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -220,6 +219,15 @@ public class TileManager {
 			tile[46].image = ImageIO.read(getClass().getResourceAsStream("/Tiles/46tile.png"));
 			tile[46].collision = false;
 			
+			tile[47] = new Tile();
+			tile[47].image = ImageIO.read(getClass().getResourceAsStream("/Tiles/wall stone topdown view ( RIGHT.)png.png"));
+			tile[47].collision = true;
+			
+			tile[48] = new Tile();
+			tile[48].image = ImageIO.read(getClass().getResourceAsStream("/Tiles/Corner (wall stone) UPPER RIGHT (SA PLAYER ROOM NI).png"));
+			tile[48].collision = true;
+			
+			
 			  		  
 			
 		}catch(IOException e) {
@@ -293,6 +301,3 @@ public class TileManager {
 		
 	}
 }
-
-
-

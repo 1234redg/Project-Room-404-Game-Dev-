@@ -94,10 +94,14 @@ public void setObjects() {
     createObject(48, new Obj_Kitchen9(), 1, 67, defaultMargin);
     createObject(49, new Obj_KitchenTable2(), 6, 69, defaultMargin);
     createObject(50, new Obj_KitchenTable3(), 10, 74, defaultMargin);
-    createObject(51, new Obj_Docplant(), 6, 64, defaultMargin);
-    createObject(52, new Obj_Docplant(), 7, 64, defaultMargin);
-    createObject(53, new Obj_Docplant(), 8, 64, defaultMargin);
-    createObject(54, new Obj_Docplant(), 9, 64, defaultMargin);
+    createObject(51, new Obj_Portrait(), 28, 61, defaultMargin);
+    createObject(52, new Obj_Tv(), 37, 62, defaultMargin);
+    createObject(53, new Obj_Table5(), 29, 64, defaultMargin);
+    createObject(54, new Obj_Table5(), 29, 69, defaultMargin);
+    createObject(55, new Obj_Table6(), 35, 74, defaultMargin);
+    createObject(56, new Obj_cab(), 23, 62, defaultMargin);
+    
+     
 }
 
 // Helper to create objects with world coordinates and collision
