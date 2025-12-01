@@ -5,14 +5,6 @@ import java.awt.*;
 import java.util.List;
 import javax.swing.JPanel;
 
-/**
- * ClueTrackerUI displays clues and NPC suspect tracking table.
- * Features:
- * - Top section: numbered clues list
- * - Bottom section: NPC table with checkboxes (☐ = suspect, ☑ = ruled out)
- * - Customizable colors (background, text, checkbox colors)
- * - Click checkboxes to toggle NPC suspect status
- */
 public class ClueTrackerUI extends JPanel {
     
     private ClueTracker tracker;

@@ -7,6 +7,8 @@ import javax.swing.event.MouseInputAdapter;
 import Entity.Entity;
 import Entity.Player;
 import HUD.HUDManager;
+import HUD.HUDObjectives;
+import HUD.HUDInvestigate; // added import
 import object.SuperObject;
 import tile.TileManager;
 
@@ -45,6 +47,8 @@ public class GamePanel extends JPanel implements Runnable {
 
     // -------------------- UI --------------------
     public HUDManager hudUI = new HUDManager(this);
+    public HUDObjectives hudObjectives; // ✅ Added Objectives HUD
+    public HUDInvestigate hudInvestigate; // ✅ Investigate HUD (clickable)
     public GameUI ui = new GameUI(this);
     public ClueTrackerUI clueTrackerUI;
     public EventHandler eHandler = new EventHandler(this);
@@ -72,6 +76,10 @@ public class GamePanel extends JPanel implements Runnable {
     private final int invPadding = 5;
     private final int invCols = 5;   // fixed columns
     private final int invRows = 6;   // fixed rows (5x6 = 30 slots)
+    private boolean showInventory = false; // inventory visibility
+
+    // -------------------- BAG HUD --------------------
+    public HUD.HUDBag gpBag;
 
     // -------------------- CONSTRUCTOR --------------------
     public GamePanel() {
@@ -90,6 +98,15 @@ public class GamePanel extends JPanel implements Runnable {
         // Initialize ClueTrackerUI
         clueTrackerUI = new ClueTrackerUI(this);
 
+        // Initialize HUDInvestigate (clickable HUD that toggles clue tracker)
+        hudInvestigate = new HUDInvestigate(this);
+
+        // Initialize Bag HUD
+        gpBag = new HUD.HUDBag(this);
+
+        // Initialize Objectives HUD
+        hudObjectives = new HUDObjectives(this);
+
         // -------------------- MOUSE HANDLER --------------------
         MouseInputAdapter mouseHandler = new MouseInputAdapter() {
             @Override
@@ -98,16 +115,35 @@ public class GamePanel extends JPanel implements Runnable {
                 mouseY = e.getY();
                 mouseClicked = true;
 
-                // Priority: ClueTrackerUI > Popup > Item Pickup
+                // Check Objectives click first
+                if (hudObjectives != null && hudObjectives.isClicked(mouseX, mouseY)) {
+                    repaint();
+                    return; // stop further clicks
+                }
+
+                // Toggle inventory if bag clicked
+                if (gpBag != null && gpBag.isClicked(mouseX, mouseY)) {
+                    showInventory = !showInventory;
+                    return; // stop further actions
+                }
+
+                // Check Investigate HUD click (opens/closes Clue Tracker)
+                if (hudInvestigate != null && hudInvestigate.isClicked(mouseX, mouseY)) {
+                    // hudInvestigate toggles clueTrackerUI visibility internally
+                    repaint();
+                    return; // stop further actions so click doesn't fall through
+                }
+
+                // ClueTrackerUI click (only if visible)
                 if (clueTrackerUI != null && clueTrackerUI.isVisible()) {
                     boolean handled = clueTrackerUI.handleClick(mouseX, mouseY);
                     if (handled) return;
                 }
 
-                if (popup != null) {
-                    popup.handleClick(mouseX, mouseY);
-                }
+                // Popup click
+                if (popup != null) popup.handleClick(mouseX, mouseY);
 
+                // Item pickup
                 String pickedItem = itemPickupManager.checkPickup(mouseX, mouseY);
                 if (pickedItem != null) {
                     popupText = "You picked up a " + pickedItem + ".";
@@ -206,16 +242,21 @@ public class GamePanel extends JPanel implements Runnable {
 
         // HUD/UI
         if (hudUI != null) hudUI.draw(g2);
+        if (hudObjectives != null) hudObjectives.draw(g2); // ✅ Draw Objectives popup
+        if (hudInvestigate != null) hudInvestigate.draw(g2); // ✅ Draw Investigate HUD (clickable)
         if (ui != null) ui.draw(g2);
 
         // ClueTrackerUI
         if (clueTrackerUI != null) clueTrackerUI.draw(g2);
 
+        // Bag HUD
+        if (gpBag != null) gpBag.draw(g2);
+
         // Popup (draw last)
         if (popup != null) popup.draw(g2);
 
-        // Inventory grid and label
-        drawInventoryGrid(g2);
+        // Inventory grid and label only if toggled
+        if (showInventory) drawInventoryGrid(g2);
 
         g2.dispose();
     }
@@ -253,9 +294,21 @@ public class GamePanel extends JPanel implements Runnable {
             }
         }
 
-        // Inventory label below the box
-        g2.setFont(new Font("Arial", Font.BOLD, 16));
+        // Inventory label below the box (centered)
+        g2.setFont(new Font("Arial", Font.BOLD, 18));
+        String label = "Inventory";
+        FontMetrics fm = g2.getFontMetrics();
+        int textWidth = fm.stringWidth(label);
+        int textX = startX + (boxWidth / 2) - (textWidth / 2);
+        int textY = startY + boxHeight + 20;
+
+        // Black stroke outline
+        g2.setColor(Color.BLACK);
+        g2.setStroke(new BasicStroke(2));
+        g2.drawString(label, textX, textY);
+
+        // Fill text
         g2.setColor(new Color(255, 255, 255, 200));
-        g2.drawString("Inventory:", startX, startY + boxHeight + 20);
+        g2.drawString(label, textX, textY);
     }
 }

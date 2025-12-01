@@ -32,7 +32,7 @@ public class StoryPanel extends JPanel implements ActionListener, KeyListener {
         AudioPlayer.getInstance().playMusic("/sounds/renaissance_of_greed.wav");
 
         // LOAD IMAGES
-        images = new Image[7 ];
+        images = new Image[7];
         try {
             images[0] = ImageIO.read(getClass().getClassLoader().getResource("MurderRoomMaps/story1.png"));
             images[1] = ImageIO.read(getClass().getClassLoader().getResource("MurderRoomMaps/story2.png"));
