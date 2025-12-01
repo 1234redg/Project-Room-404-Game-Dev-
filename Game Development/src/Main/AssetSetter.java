@@ -133,9 +133,20 @@ public void createObject(int index, SuperObject obj, int worldCol, int worldRow,
 public void setNPC() {
     // Example: add one Lady NPC at position (10,10)
     gp.npc[0] = new Npc_lady(gp);
-    gp.npc[0].worldX = gp.tileSize * 10;
-    gp.npc[0].worldY = gp.tileSize * 13;
+    gp.npc[0].worldX = gp.tileSize * 21;
+    gp.npc[0].worldY = gp.tileSize * 43;
+    
+    gp.npc[1] = new Peter(gp);
+    gp.npc[1].worldX = gp.tileSize * 14;
+    gp.npc[1].worldY = gp.tileSize * 51;
 
+    gp.npc[2] = new Kyle(gp);
+    gp.npc[2].worldX = gp.tileSize * 28;
+    gp.npc[2].worldY = gp.tileSize * 59;
+
+    gp.npc[3] = new Summer(gp);
+    gp.npc[3].worldX = gp.tileSize * 15;
+    gp.npc[3].worldY = gp.tileSize * 23;
     // Add more NPCs as needed
 }
 

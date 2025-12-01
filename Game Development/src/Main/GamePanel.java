@@ -42,14 +42,22 @@ public class GamePanel extends JPanel implements Runnable {
     public Player player = new Player(this, keyH);
     public SuperObject obj[] = new SuperObject[100];
     public Entity npc[] = new Entity[32];
+
+    // -------------------- UI --------------------
     public HUDManager hudUI = new HUDManager(this);
+    public GameUI ui = new GameUI(this);
+    public ClueTrackerUI clueTrackerUI;
+
     public EventHandler eHandler = new EventHandler(this);
 
-    // -------------------- ITEM PICKUP MANAGER --------------------
+    // -------------------- ITEM PICKUP --------------------
     public ItemPickupManager itemPickupManager;
 
     // -------------------- POPUP --------------------
     public Popup popup;
+    private String popupText = null;
+    private long popupStartTime = 0;
+    private final int POPUP_DURATION = 3000; // 3 seconds
 
     // -------------------- GAME STATES --------------------
     public final int playState = 1;
@@ -59,6 +67,11 @@ public class GamePanel extends JPanel implements Runnable {
     public int mouseX, mouseY;
     public boolean mouseClicked = false;
     public int currentNPC = -1;
+
+    // -------------------- INVENTORY SETTINGS --------------------
+    private final int invSlotSize = 40;
+    private final int invPadding = 5;
+    private final int invCols = 4;
 
     // -------------------- CONSTRUCTOR --------------------
     public GamePanel() {
@@ -71,28 +84,35 @@ public class GamePanel extends JPanel implements Runnable {
         // Initialize ItemPickupManager
         itemPickupManager = new ItemPickupManager(obj, player);
 
-        // Initial popup on startup
+        // Initialize Popup
         popup = new Popup(screenWidth, screenHeight, "/MurderRoomMaps/Intro1.png");
+
+        // Initialize ClueTrackerUI
+        clueTrackerUI = new ClueTrackerUI(this);
 
         // -------------------- MOUSE HANDLER --------------------
         MouseInputAdapter mouseHandler = new MouseInputAdapter() {
             @Override
             public void mousePressed(java.awt.event.MouseEvent e) {
 
-                // Save click
                 mouseX = e.getX();
                 mouseY = e.getY();
                 mouseClicked = true;
 
-                // Popup handle
+                // Priority: ClueTrackerUI > Popup > Item Pickup
+                if (clueTrackerUI != null && clueTrackerUI.isVisible()) {
+                    boolean handled = clueTrackerUI.handleClick(mouseX, mouseY);
+                    if (handled) return;
+                }
+
                 if (popup != null) {
                     popup.handleClick(mouseX, mouseY);
                 }
 
-                // Item pickup
                 String pickedItem = itemPickupManager.checkPickup(mouseX, mouseY);
                 if (pickedItem != null) {
-                    System.out.println("You picked up a " + pickedItem + "!");
+                    popupText = "You picked up a " + pickedItem + ".";
+                    popupStartTime = System.currentTimeMillis();
                     repaint();
                 }
             }
@@ -109,15 +129,26 @@ public class GamePanel extends JPanel implements Runnable {
 
         set.setObjects();
         set.setNPC();
+
+        // Register all NPCs in the ClueTracker
+        ClueTracker tracker = ClueTracker.getInstance();
+        for (Entity npc : npc) {
+            if (npc != null) {
+                String npcName = npc.getClass().getSimpleName();
+                tracker.registerNPC(npcName);
+            }
+        }
+        tracker.assignRandomProfessions();
+
         gameState = playState;
     }
 
+    // -------------------- GAME THREAD --------------------
     public void startGameThread() {
         gameThread = new Thread(this);
         gameThread.start();
     }
 
-    // -------------------- GAME LOOP --------------------
     @Override
     public void run() {
         double drawInterval = 1000000000.0 / FPS;
@@ -130,9 +161,7 @@ public class GamePanel extends JPanel implements Runnable {
             try {
                 double remainingTime = nextDrawTime - System.nanoTime();
                 remainingTime /= 1_000_000;
-
                 if (remainingTime < 0) remainingTime = 0;
-
                 Thread.sleep((long) remainingTime);
                 nextDrawTime += drawInterval;
 
@@ -144,24 +173,19 @@ public class GamePanel extends JPanel implements Runnable {
 
     // -------------------- UPDATE --------------------
     public void update() {
+        if (popup != null) popup.update();
 
-        // Update popup first
-        if (popup != null) {
-            popup.update();
-        }
-
-        // Game logic
         if (gameState == playState) {
             player.update();
             eHandler.checkEvent();
 
-            for (int i = 0; i < npc.length; i++) {
-                if (npc[i] != null) npc[i].update();
+            for (Entity n : npc) {
+                if (n != null) n.update();
             }
         }
     }
 
-    // -------------------- RENDER --------------------
+    // -------------------- DRAW --------------------
     @Override
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -184,57 +208,49 @@ public class GamePanel extends JPanel implements Runnable {
         player.draw(g2);
 
         // HUD/UI
-        hudUI.draw(g2);
+        if (hudUI != null) hudUI.draw(g2);
+        if (ui != null) ui.draw(g2);
 
-        // Popup drawn last
-        if (popup != null) {
-            popup.draw(g2);
-        }
+        // ClueTrackerUI
+        if (clueTrackerUI != null) clueTrackerUI.draw(g2);
 
-	     // ========================================================
-	//      INVENTORY GRID DRAWING
-	//========================================================
-	int slotSize = 40;            // icon size
-	int padding = 5;              // space between slots
-	int cols = 4;                 // 4 columns
-	int rows = 3;                 // 3 rows
-	
-	int boxWidth = (slotSize + padding) * cols + padding;
-	int boxHeight = (slotSize + padding) * rows + padding;
-	
-	int startX = screenWidth - boxWidth - 20;  // upper-right corner
-	int startY = 20;
-	
-	//Background box
-	g2.setColor(new Color(0, 0, 0, 150));
-	g2.fillRoundRect(startX, startY, boxWidth, boxHeight, 15, 15);
-	
-	//Draw grid slots + item icons
-	for (int i = 0; i < player.inventory.size(); i++) {
-	
-	int col = i % cols;
-	int row = i / cols;
-	
-	int x = startX + padding + col * (slotSize + padding);
-	int y = startY + padding + row * (slotSize + padding);
-	
-	// Slot border
-	g2.setColor(Color.white);
-	g2.drawRect(x, y, slotSize, slotSize);
-	
-	// Draw item image scaled down
-	SuperObject item = player.inventory.get(i);
-	
-	if (item.image != null) {
-	g2.drawImage(item.image,
-	   x + 4, y + 4,
-	   slotSize - 8, slotSize - 8,
-	   null
-	);
-	}
-	}
+        // Popup (draw last)
+        if (popup != null) popup.draw(g2);
 
-        
+        // -------------------- INVENTORY GRID --------------------
+        drawInventoryGrid(g2);
+
         g2.dispose();
+    }
+
+    // -------------------- INVENTORY DRAWING --------------------
+    private void drawInventoryGrid(Graphics2D g2) {
+        int rows = (int) Math.ceil((double) player.inventory.size() / invCols);
+        int boxWidth = (invSlotSize + invPadding) * invCols + invPadding;
+        int boxHeight = (invSlotSize + invPadding) * rows + invPadding;
+
+        int startX = screenWidth - boxWidth - 20;
+        int startY = 20;
+
+        // Background
+        g2.setColor(new Color(0, 0, 0, 150));
+        g2.fillRoundRect(startX, startY, boxWidth, boxHeight, 15, 15);
+
+        // Draw items
+        for (int i = 0; i < player.inventory.size(); i++) {
+            int row = i / invCols;
+            int col = i % invCols;
+
+            int x = startX + invPadding + col * (invSlotSize + invPadding);
+            int y = startY + invPadding + row * (invSlotSize + invPadding);
+
+            g2.setColor(Color.white);
+            g2.drawRect(x, y, invSlotSize, invSlotSize);
+
+            SuperObject item = player.inventory.get(i);
+            if (item.image != null) {
+                g2.drawImage(item.image, x + 4, y + 4, invSlotSize - 8, invSlotSize - 8, null);
+            }
+        }
     }
 }

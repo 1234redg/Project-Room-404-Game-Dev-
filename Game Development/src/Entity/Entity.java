@@ -26,12 +26,17 @@ public class Entity {
     public int solidAreaDefaultX, solidAreaDefaultY;
     public boolean collisionOn = false;
     public int actionLockCounter = 0;
+	public boolean inDialogue = false;
     String dialogues[] = new String[30];
     int dialogueIndex = 0;
+//<<<<<<< HEAD
     
     //CHARACTER STATUS
     public int maxLife;
     public int life;
+//=======
+    String clues[] = new String[30]; // clues associated with each dialogue (null = no clue)
+//>>>>>>> branch 'Main' of https://github.com/1234redg/Project-Room-404-Game-Dev-.git
 
     public Entity(GamePanel gp) {
     	this.gp = gp;
@@ -43,7 +48,17 @@ public class Entity {
     	 if(dialogues[dialogueIndex] == null) {
 			 dialogueIndex = 0;
 		 }
+//<<<<<<< HEAD
 		 gp.hudUI.currentDialogue = dialogues[dialogueIndex];
+//=======
+		 gp.ui.currentDialogue = dialogues[dialogueIndex];
+		 
+		 // Add clue if this dialogue has one associated
+		 if (clues[dialogueIndex] != null && !clues[dialogueIndex].isEmpty()) {
+		 	Main.ClueTracker.getInstance().addClue(clues[dialogueIndex]);
+		 }
+		 
+//>>>>>>> branch 'Main' of https://github.com/1234redg/Project-Room-404-Game-Dev-.git
 		 dialogueIndex++;
 		 
 		 switch(gp.player.direction) {
