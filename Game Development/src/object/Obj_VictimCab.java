@@ -11,13 +11,13 @@ public class Obj_VictimCab extends SuperObject{
 	    name = "VictimCab";
 
 	    try {
-	        image = ImageIO.read(getClass().getResourceAsStream("/objects/Group 56.png"));
+	        image = ImageIO.read(getClass().getResourceAsStream("/objects/victim closet set.png"));
 	    } catch (IOException e) {
 	        e.printStackTrace();
 	    }
 
 	    // adjust the size of the objects
-	    width = 400;
+	    width = 600;
 	    height = 150;
 	}
 

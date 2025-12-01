@@ -11,7 +11,7 @@ public class Obj_bed extends SuperObject {
 	    name = "bed";
 
 	    try {
-	        image = ImageIO.read(getClass().getResourceAsStream("/objects/Bed Set_doc.png"));
+	        image = ImageIO.read(getClass().getResourceAsStream("/objects/doctor bed.png"));
 	    } catch (IOException e) {
 	        e.printStackTrace();
 	    }

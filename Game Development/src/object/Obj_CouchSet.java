@@ -11,7 +11,7 @@ public class Obj_CouchSet extends SuperObject {
 	    name = "couchSet";
 
 	    try {
-	        image = ImageIO.read(getClass().getResourceAsStream("/objects/COUCH SET.png"));
+	        image = ImageIO.read(getClass().getResourceAsStream("/objects/Group 142.png"));
 	    } catch (IOException e) {
 	        e.printStackTrace();
 	    }

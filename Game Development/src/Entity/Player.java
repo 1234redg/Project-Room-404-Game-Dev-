@@ -1,5 +1,5 @@
 package Entity;
-
+import java.util.ArrayList;
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
@@ -7,6 +7,7 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 import Main.GamePanel;
 import Main.KeyHandler;
+import object.SuperObject;
 
 public class Player extends Entity {
 
@@ -15,6 +16,8 @@ public class Player extends Entity {
 
     public final int screenX;
     public final int screenY;
+    public ArrayList<SuperObject> inventory = new ArrayList<>();
+    public final int maxInventorySize = 12; // 3×4 grid
 
     public Player(GamePanel gp, KeyHandler keyH) {
     		super(gp); 

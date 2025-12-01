@@ -11,7 +11,7 @@ public class Obj_Pcloset extends SuperObject {
 	    name = "Pcloset";
 
 	    try {
-	        image = ImageIO.read(getClass().getResourceAsStream("/objects/Group 40.png"));
+	        image = ImageIO.read(getClass().getResourceAsStream("/objects/pcloset.png"));
 	    } catch (IOException e) {
 	        e.printStackTrace();
 	    }

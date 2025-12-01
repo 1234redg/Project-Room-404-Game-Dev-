@@ -45,6 +45,9 @@ public class GamePanel extends JPanel implements Runnable {
     public HUDManager hudUI = new HUDManager(this);
     public EventHandler eHandler = new EventHandler(this);
 
+    // -------------------- ITEM PICKUP MANAGER --------------------
+    public ItemPickupManager itemPickupManager;
+
     // -------------------- POPUP --------------------
     public Popup popup;
 
@@ -65,10 +68,13 @@ public class GamePanel extends JPanel implements Runnable {
         this.addKeyListener(keyH);
         this.setFocusable(true);
 
+        // Initialize ItemPickupManager
+        itemPickupManager = new ItemPickupManager(obj, player);
+
         // Initial popup on startup
         popup = new Popup(screenWidth, screenHeight, "/MurderRoomMaps/Intro1.png");
 
-        // -------------------- FIXED MOUSE LISTENER --------------------
+        // -------------------- MOUSE HANDLER --------------------
         MouseInputAdapter mouseHandler = new MouseInputAdapter() {
             @Override
             public void mousePressed(java.awt.event.MouseEvent e) {
@@ -83,26 +89,11 @@ public class GamePanel extends JPanel implements Runnable {
                     popup.handleClick(mouseX, mouseY);
                 }
 
-                // Click detection for items in "items" package
-                for (int i = 0; i < obj.length; i++) {
-                    SuperObject o = obj[i];
-
-                    if (o != null) {
-                        Package p = o.getClass().getPackage();
-                        if (p != null && "items".equals(p.getName())) {
-
-                            int objScreenX = o.worldX - player.worldX + player.screenX;
-                            int objScreenY = o.worldY - player.worldY + player.screenY;
-
-                            if (mouseX >= objScreenX && mouseX <= objScreenX + o.width &&
-                                mouseY >= objScreenY && mouseY <= objScreenY + o.height) {
-
-                                obj[i] = null;  // pick up item
-                                repaint();
-                                break;
-                            }
-                        }
-                    }
+                // Item pickup
+                String pickedItem = itemPickupManager.checkPickup(mouseX, mouseY);
+                if (pickedItem != null) {
+                    System.out.println("You picked up a " + pickedItem + "!");
+                    repaint();
                 }
             }
         };
@@ -113,6 +104,9 @@ public class GamePanel extends JPanel implements Runnable {
 
     // -------------------- GAME SETUP --------------------
     public void SetUpGame() {
+        // Initialize gameplay audio
+        AudioPlayer.getInstance().playMusic("/sounds/01 - buffy - old fashion - intro.wav");
+
         set.setObjects();
         set.setNPC();
         gameState = playState;
@@ -197,6 +191,50 @@ public class GamePanel extends JPanel implements Runnable {
             popup.draw(g2);
         }
 
+	     // ========================================================
+	//      INVENTORY GRID DRAWING
+	//========================================================
+	int slotSize = 40;            // icon size
+	int padding = 5;              // space between slots
+	int cols = 4;                 // 4 columns
+	int rows = 3;                 // 3 rows
+	
+	int boxWidth = (slotSize + padding) * cols + padding;
+	int boxHeight = (slotSize + padding) * rows + padding;
+	
+	int startX = screenWidth - boxWidth - 20;  // upper-right corner
+	int startY = 20;
+	
+	//Background box
+	g2.setColor(new Color(0, 0, 0, 150));
+	g2.fillRoundRect(startX, startY, boxWidth, boxHeight, 15, 15);
+	
+	//Draw grid slots + item icons
+	for (int i = 0; i < player.inventory.size(); i++) {
+	
+	int col = i % cols;
+	int row = i / cols;
+	
+	int x = startX + padding + col * (slotSize + padding);
+	int y = startY + padding + row * (slotSize + padding);
+	
+	// Slot border
+	g2.setColor(Color.white);
+	g2.drawRect(x, y, slotSize, slotSize);
+	
+	// Draw item image scaled down
+	SuperObject item = player.inventory.get(i);
+	
+	if (item.image != null) {
+	g2.drawImage(item.image,
+	   x + 4, y + 4,
+	   slotSize - 8, slotSize - 8,
+	   null
+	);
+	}
+	}
+
+        
         g2.dispose();
     }
 }

@@ -11,14 +11,14 @@ public class Obj_NurseTable extends SuperObject {
 	    name = "NurseTable";
 
 	    try {
-	        image = ImageIO.read(getClass().getResourceAsStream("/objects/TABLE AND CHAIR SET.png"));
+	        image = ImageIO.read(getClass().getResourceAsStream("/objects/nurse table.png"));
 	    } catch (IOException e) {
 	        e.printStackTrace();
 	    }
 
 	    // Adjust the size of the object
-	    width = 185;
-	    height = 90;
+	    width = 200;
+	    height = 110;
 	}
 
 

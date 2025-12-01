@@ -1,6 +1,9 @@
 package tile;
 
 import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Color;
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -20,7 +23,7 @@ public class TileManager {
 		
 		this.gp = gp;
 		
-		tile = new Tile[50]; // Create 50 kinds of tiles (e.g., walls, floors, etc.)
+		tile = new Tile[100]; // Create 50 kinds of tiles (e.g., walls, floors, etc.)
 		murderTileNum = new int[gp.maxWorldCol][gp.maxWorldRow];
 		
 		getTileImage(); // Renamed for Java convention
@@ -220,12 +223,28 @@ public class TileManager {
 			tile[46].collision = false;
 			
 			tile[47] = new Tile();
-			tile[47].image = ImageIO.read(getClass().getResourceAsStream("/Tiles/wall stone topdown view ( RIGHT.)png.png"));
+			tile[47].image = loadImage("/tiles/wall stone topdown view ( RIGHT.)png.png");
 			tile[47].collision = true;
 			
 			tile[48] = new Tile();
-			tile[48].image = ImageIO.read(getClass().getResourceAsStream("/Tiles/Corner (wall stone) UPPER RIGHT (SA PLAYER ROOM NI).png"));
+			tile[48].image = loadImage("/tiles/Corner (wall stone) UPPER RIGHT (SA PLAYER ROOM NI).png");
 			tile[48].collision = true;
+
+			tile[49] = new Tile();
+			tile[49].image = loadImage("/tiles/kitchen floor2.png");
+			tile[49].collision = false;
+
+			tile[50] = new Tile();
+			tile[50].image = loadImage("/tiles/floors 5.png");
+			tile[50].collision = false;
+
+			tile[51] = new Tile();
+			tile[51].image = loadImage("/tiles/floor 7.png");
+			tile[51].collision = false;
+
+			tile[52] = new Tile();
+			tile[52].image = loadImage("/tiles/floors 8.png");
+			tile[52].collision = false;
 			
 			
 			  		  
@@ -233,7 +252,32 @@ public class TileManager {
 		}catch(IOException e) {
 			e.printStackTrace();
 		}
+		
+	}
 				
+	/**
+	 * Load an image from resources. If resource is missing, returns a placeholder.
+	 */
+	private BufferedImage loadImage(String resourcePath) throws IOException {
+		InputStream is = getClass().getResourceAsStream(resourcePath);
+		if (is == null) {
+			System.err.println("Tile image not found: " + resourcePath);
+			int size = gp != null ? gp.tileSize : 32;
+			BufferedImage placeholder = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
+			Graphics2D g = placeholder.createGraphics();
+			g.setColor(Color.MAGENTA);
+			g.fillRect(0, 0, size, size);
+			g.setColor(Color.BLACK);
+			g.drawRect(0, 0, size-1, size-1);
+			g.dispose();
+			return placeholder;
+		}
+		try {
+			BufferedImage img = ImageIO.read(is);
+			return img;
+		} finally {
+			try { is.close(); } catch(Exception ex) {}
+		}
 	}
 	    
 	    
