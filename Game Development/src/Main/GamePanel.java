@@ -47,7 +47,6 @@ public class GamePanel extends JPanel implements Runnable {
     public HUDManager hudUI = new HUDManager(this);
     public GameUI ui = new GameUI(this);
     public ClueTrackerUI clueTrackerUI;
-
     public EventHandler eHandler = new EventHandler(this);
 
     // -------------------- ITEM PICKUP --------------------
@@ -71,7 +70,8 @@ public class GamePanel extends JPanel implements Runnable {
     // -------------------- INVENTORY SETTINGS --------------------
     private final int invSlotSize = 40;
     private final int invPadding = 5;
-    private final int invCols = 4;
+    private final int invCols = 5;   // fixed columns
+    private final int invRows = 6;   // fixed rows (5x6 = 30 slots)
 
     // -------------------- CONSTRUCTOR --------------------
     public GamePanel() {
@@ -94,7 +94,6 @@ public class GamePanel extends JPanel implements Runnable {
         MouseInputAdapter mouseHandler = new MouseInputAdapter() {
             @Override
             public void mousePressed(java.awt.event.MouseEvent e) {
-
                 mouseX = e.getX();
                 mouseY = e.getY();
                 mouseClicked = true;
@@ -124,13 +123,11 @@ public class GamePanel extends JPanel implements Runnable {
 
     // -------------------- GAME SETUP --------------------
     public void SetUpGame() {
-        // Initialize gameplay audio
         AudioPlayer.getInstance().playMusic("/sounds/01 - buffy - old fashion - intro.wav");
 
         set.setObjects();
         set.setNPC();
 
-        // Register all NPCs in the ClueTracker
         ClueTracker tracker = ClueTracker.getInstance();
         for (Entity npc : npc) {
             if (npc != null) {
@@ -217,7 +214,7 @@ public class GamePanel extends JPanel implements Runnable {
         // Popup (draw last)
         if (popup != null) popup.draw(g2);
 
-        // -------------------- INVENTORY GRID --------------------
+        // Inventory grid and label
         drawInventoryGrid(g2);
 
         g2.dispose();
@@ -225,32 +222,40 @@ public class GamePanel extends JPanel implements Runnable {
 
     // -------------------- INVENTORY DRAWING --------------------
     private void drawInventoryGrid(Graphics2D g2) {
-        int rows = (int) Math.ceil((double) player.inventory.size() / invCols);
         int boxWidth = (invSlotSize + invPadding) * invCols + invPadding;
-        int boxHeight = (invSlotSize + invPadding) * rows + invPadding;
+        int boxHeight = (invSlotSize + invPadding) * invRows + invPadding;
 
-        int startX = screenWidth - boxWidth - 20;
+        int startX = screenWidth - boxWidth - 40;
         int startY = 20;
 
-        // Background
+        // Background box
         g2.setColor(new Color(0, 0, 0, 150));
         g2.fillRoundRect(startX, startY, boxWidth, boxHeight, 15, 15);
 
-        // Draw items
-        for (int i = 0; i < player.inventory.size(); i++) {
-            int row = i / invCols;
-            int col = i % invCols;
+        // Draw all fixed grid slots
+        for (int row = 0; row < invRows; row++) {
+            for (int col = 0; col < invCols; col++) {
+                int x = startX + invPadding + col * (invSlotSize + invPadding);
+                int y = startY + invPadding + row * (invSlotSize + invPadding);
 
-            int x = startX + invPadding + col * (invSlotSize + invPadding);
-            int y = startY + invPadding + row * (invSlotSize + invPadding);
+                // Slot border
+                g2.setColor(new Color(139, 69, 19, 150)); // brown with transparency
+                g2.drawRect(x, y, invSlotSize, invSlotSize);
 
-            g2.setColor(Color.white);
-            g2.drawRect(x, y, invSlotSize, invSlotSize);
-
-            SuperObject item = player.inventory.get(i);
-            if (item.image != null) {
-                g2.drawImage(item.image, x + 4, y + 4, invSlotSize - 8, invSlotSize - 8, null);
+                // Draw item if exists
+                int index = row * invCols + col;
+                if (index < player.inventory.size()) {
+                    SuperObject item = player.inventory.get(index);
+                    if (item.image != null) {
+                        g2.drawImage(item.image, x + 4, y + 4, invSlotSize - 8, invSlotSize - 8, null);
+                    }
+                }
             }
         }
+
+        // Inventory label below the box
+        g2.setFont(new Font("Arial", Font.BOLD, 16));
+        g2.setColor(new Color(255, 255, 255, 200));
+        g2.drawString("Inventory:", startX, startY + boxHeight + 20);
     }
 }
