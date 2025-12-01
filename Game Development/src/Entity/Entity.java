@@ -26,8 +26,10 @@ public class Entity {
     public int solidAreaDefaultX, solidAreaDefaultY;
     public boolean collisionOn = false;
     public int actionLockCounter = 0;
+	public boolean inDialogue = false;
     String dialogues[] = new String[30];
     int dialogueIndex = 0;
+    String clues[] = new String[30]; // clues associated with each dialogue (null = no clue)
 
     public Entity(GamePanel gp) {
     	this.gp = gp;
@@ -40,6 +42,12 @@ public class Entity {
 			 dialogueIndex = 0;
 		 }
 		 gp.ui.currentDialogue = dialogues[dialogueIndex];
+		 
+		 // Add clue if this dialogue has one associated
+		 if (clues[dialogueIndex] != null && !clues[dialogueIndex].isEmpty()) {
+		 	Main.ClueTracker.getInstance().addClue(clues[dialogueIndex]);
+		 }
+		 
 		 dialogueIndex++;
 		 
 		 switch(gp.player.direction) {

@@ -24,10 +24,11 @@ public class GameUI {
     }
     
     public void showMessage(String text) {
-    	
-    	message = text;
-    	messageOn =true;
-    }
+    currentDialogue = text;     // <-- update currentDialogue
+    messageOn = true;
+    gp.gameState = gp.dialogueState;  // <-- switch to dialogue state
+}
+
     
     public void draw(Graphics2D g2) {
     	

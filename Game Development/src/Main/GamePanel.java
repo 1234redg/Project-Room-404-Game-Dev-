@@ -42,6 +42,7 @@ public class GamePanel extends JPanel implements Runnable {
     public SuperObject obj[] = new SuperObject[100];
     public Entity npc[] = new Entity[32];
     public GameUI ui = new GameUI(this);
+    public ClueTrackerUI clueTrackerUI;
 
     // -------------------- POPUP --------------------
     public Popup popup;
@@ -69,6 +70,12 @@ public class GamePanel extends JPanel implements Runnable {
         MouseInputAdapter mouseHandler = new MouseInputAdapter() {
             @Override
             public void mousePressed(java.awt.event.MouseEvent e) {
+                // Forward click to ClueTrackerUI first if visible (UI drawn by GamePanel)
+                if (clueTrackerUI != null && clueTrackerUI.isVisible()) {
+                    boolean handled = clueTrackerUI.handleClick(e.getX(), e.getY());
+                    if (handled) return;
+                }
+
                 if (popup != null) {
                     popup.handleClick(e.getX(), e.getY());
                 }
@@ -84,6 +91,9 @@ public class GamePanel extends JPanel implements Runnable {
 
         this.addMouseListener(mouseHandler);
         this.addMouseMotionListener(mouseHandler);
+        
+        // Initialize ClueTrackerUI
+        clueTrackerUI = new ClueTrackerUI(this);
     }
 
     // -------------------- GAME SETUP --------------------
@@ -93,6 +103,18 @@ public class GamePanel extends JPanel implements Runnable {
         
         set.setObjects();
         set.setNPC();
+        
+        // Register all NPCs in the ClueTracker (use class name as identifier)
+        ClueTracker tracker = ClueTracker.getInstance();
+        for (Entity npc : npc) {
+            if (npc != null) {
+                String npcName = npc.getClass().getSimpleName();
+                tracker.registerNPC(npcName);
+            }
+        }
+        // Assign random professions to registered NPCs for this game start
+        tracker.assignRandomProfessions();
+        
         gameState = playState;
     }
 
@@ -167,6 +189,11 @@ public class GamePanel extends JPanel implements Runnable {
 
         // Draw UI
         ui.draw(g2);
+
+        // -------------------- DRAW CLUE TRACKER --------------------
+        if (clueTrackerUI != null) {
+            clueTrackerUI.draw(g2);
+        }
 
         // -------------------- DRAW POPUP LAST --------------------
         if (popup != null) {

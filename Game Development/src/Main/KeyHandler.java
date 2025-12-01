@@ -45,6 +45,13 @@ public class KeyHandler implements KeyListener {
         	         enterPressed = true;      
         	        }
         	        
+        	        // Clue Tracker toggle (J key)
+        	        if (code == KeyEvent.VK_J) {
+        	            if (gp.clueTrackerUI != null) {
+        	                gp.clueTrackerUI.toggleVisibility();
+        	            }
+        	        }
+        	        
         	        //debug
         	            if(code == KeyEvent.VK_T) {
         	            	if(checkDrawTime == false) {

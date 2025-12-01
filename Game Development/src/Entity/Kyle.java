@@ -1,14 +1,16 @@
 package Entity;
 
 import java.io.IOException;
+
 import javax.imageio.ImageIO;
 
 import Main.ClueTracker;
 import Main.GamePanel;
 
-public class Npc_lady extends Entity {
+public class Kyle extends  Entity {
 
-    public Npc_lady(GamePanel gp) {
+
+    public Kyle(GamePanel gp) {
         super(gp);
 
         direction = "down";
@@ -25,8 +27,8 @@ public class Npc_lady extends Entity {
     public void getImage() {
         try {
             // Only two sprites are loaded
-            down1 = ImageIO.read(getClass().getResourceAsStream("/NPC/npc1IDLE1.png"));
-            down2 = ImageIO.read(getClass().getResourceAsStream("/NPC/npc1IDLE2stretched.png"));
+            down1 = ImageIO.read(getClass().getResourceAsStream("/NPC/npc3IDLE1.png"));
+            down2 = ImageIO.read(getClass().getResourceAsStream("/NPC/npc3IDLE2Stretched.png"));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -74,6 +76,5 @@ public void speak() {
         dialogueIndex = 0;
     }
 }
-
 
 }
