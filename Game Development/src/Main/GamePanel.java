@@ -88,6 +88,9 @@ public class GamePanel extends JPanel implements Runnable {
 
     // -------------------- GAME SETUP --------------------
     public void SetUpGame() {
+        // Initialize gameplay audio
+        AudioPlayer.getInstance().playMusic("/sounds/01 - buffy - old fashion - intro.wav");
+        
         set.setObjects();
         set.setNPC();
         gameState = playState;

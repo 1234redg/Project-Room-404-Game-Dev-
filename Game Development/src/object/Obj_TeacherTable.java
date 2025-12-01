@@ -11,7 +11,7 @@ public class Obj_TeacherTable extends SuperObject {
 	    name = "TeacherTable";
 
 	    try {
-	        image = ImageIO.read(getClass().getResourceAsStream("/objects/DINERSET.png"));
+	        image = ImageIO.read(getClass().getResourceAsStream("/objects/texher table.png"));
 	    } catch (IOException e) {
 	        e.printStackTrace();
 	    }

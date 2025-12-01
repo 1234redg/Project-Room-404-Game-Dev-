@@ -26,6 +26,9 @@ public class MainMenu extends JPanel {
     public MainMenu(JFrame window) {
         this.window = window;
 
+        // Initialize audio system
+        AudioPlayer.getInstance().playMusic("/sounds/Depressed of Happytown.wav");
+
         try {
             background = ImageIO.read(getClass().getClassLoader().getResource("MurderRoomMaps/MainMenu1.png"));
         } catch (Exception e) {

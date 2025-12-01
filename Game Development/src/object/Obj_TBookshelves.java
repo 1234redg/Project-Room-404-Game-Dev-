@@ -11,7 +11,7 @@ public class Obj_TBookshelves extends SuperObject {
 	    name = "TBookshelves";
 
 	    try {
-	        image = ImageIO.read(getClass().getResourceAsStream("/objects/SET_BOOKSHELVES.png"));
+	        image = ImageIO.read(getClass().getResourceAsStream("/objects/Group 140.png"));
 	    } catch (IOException e) {
 	        e.printStackTrace();
 	    }

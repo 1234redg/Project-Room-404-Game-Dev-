@@ -28,6 +28,9 @@ public class StoryPanel extends JPanel implements ActionListener, KeyListener {
     public StoryPanel(JFrame window) {
         this.window = window;
 
+        // Initialize audio system for story
+        AudioPlayer.getInstance().playMusic("/sounds/renaissance_of_greed.wav");
+
         // LOAD IMAGES
         images = new Image[5];
         try {

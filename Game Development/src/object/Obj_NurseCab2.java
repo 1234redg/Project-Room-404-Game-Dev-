@@ -11,13 +11,13 @@ public class Obj_NurseCab2 extends SuperObject {
 	    name = "Nurse";
 
 	    try {
-	        image = ImageIO.read(getClass().getResourceAsStream("/objects/CABINETS WITH FLOWERS.png"));
+	        image = ImageIO.read(getClass().getResourceAsStream("/objects/Component 1.png"));
 	    } catch (IOException e) {
 	        e.printStackTrace();
 	    }
 
 	    // Adjust the size of the object
-	    width = 130;
+	    width = 400;
 	    height = 120;
 	}
 

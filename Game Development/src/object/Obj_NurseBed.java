@@ -14,7 +14,7 @@ public class Obj_NurseBed extends SuperObject {
 	             
 
 	    try {
-	        image = ImageIO.read(getClass().getResourceAsStream("/objects/BEDSET_NURSE.png"));
+	        image = ImageIO.read(getClass().getResourceAsStream("/objects/nurse bed.png"));
 	        width = image.getWidth();
             height = image.getHeight();
 	    } catch (IOException e) {

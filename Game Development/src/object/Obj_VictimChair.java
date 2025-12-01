@@ -11,14 +11,14 @@ public class Obj_VictimChair extends SuperObject {
 	    name = "VictimChair";
 
 	    try {
-	        image = ImageIO.read(getClass().getResourceAsStream("/objects/SET_TABLE_AND_CHAIR.png"));
+	        image = ImageIO.read(getClass().getResourceAsStream("/objects/victim couch set.png"));
 	    } catch (IOException e) {
 	        e.printStackTrace();
 	    }
 
 	    // Adjust the size of the object
 	    width = 185;
-	    height = 90;
+	    height = 110;
 	}
 
 }

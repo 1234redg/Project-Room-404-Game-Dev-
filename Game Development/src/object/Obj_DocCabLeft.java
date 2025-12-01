@@ -11,13 +11,13 @@ public class Obj_DocCabLeft extends SuperObject {
 	    name = "DocCabLeft";
 
 	    try {
-	        image = ImageIO.read(getClass().getResourceAsStream("/objects/SET_BookSHELVES_cabinet_mirror.png"));
+	        image = ImageIO.read(getClass().getResourceAsStream("/objects/doc cabinet set.png"));
 	    } catch (IOException e) {
 	        e.printStackTrace();
 	    }
 
 	    // adjust the size of the objects
-	    width = 330;
+	    width = 420;
 	    height = 150;
 	}
 
