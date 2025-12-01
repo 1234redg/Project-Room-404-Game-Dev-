@@ -17,9 +17,14 @@ public class SuperObject {
 
     public int width = 32;   // object width
     public int height = 32;  // object height
+    
+    public int offsetX = 0;   // optional pixel offset (right/left)
+    public int offsetY = 0;   // optional pixel offset (up/down)
+
 
     // Collision hitbox
     public Rectangle solidArea;
+	public boolean canPickUp;
 
     public SuperObject() {
         // Default hitbox matches object size
@@ -36,7 +41,15 @@ public class SuperObject {
             worldY + height > gp.player.worldY - gp.player.screenY &&
             worldY - height < gp.player.worldY + gp.player.screenY) {
 
-            g2.drawImage(image, screenX, screenY, width, height, null);
+            g2.drawImage(
+                image,
+                screenX + offsetX,   // apply horizontal offset
+                screenY + offsetY,   // apply vertical offset
+                width,
+                height,
+                null
+            );
         }
     }
+
 }

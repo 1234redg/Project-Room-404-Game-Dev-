@@ -2,6 +2,8 @@ package Main;
 
 import object.*;
 import Entity.*;
+import items.*;
+import items.Obj_Knife;
 
 public class AssetSetter {
 
@@ -100,6 +102,9 @@ public void setObjects() {
     createObject(54, new Obj_Table5(), 29, 69, defaultMargin);
     createObject(55, new Obj_Table6(), 35, 74, defaultMargin);
     createObject(56, new Obj_cab(), 23, 62, defaultMargin);
+  
+    createObject(57, new Obj_SRKey(), 2, 70, 0);
+    createObject(58, new Obj_Knife(), 2, 73, 0);
     
      
 }

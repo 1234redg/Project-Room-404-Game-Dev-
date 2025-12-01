@@ -6,6 +6,7 @@ import javax.swing.event.MouseInputAdapter;
 
 import Entity.Entity;
 import Entity.Player;
+import HUD.HUDManager;
 import object.SuperObject;
 import tile.TileManager;
 
@@ -41,7 +42,8 @@ public class GamePanel extends JPanel implements Runnable {
     public Player player = new Player(this, keyH);
     public SuperObject obj[] = new SuperObject[100];
     public Entity npc[] = new Entity[32];
-    public GameUI ui = new GameUI(this);
+    public HUDManager hudUI = new HUDManager(this);
+    public EventHandler eHandler = new EventHandler(this);
 
     // -------------------- POPUP --------------------
     public Popup popup;
@@ -51,7 +53,8 @@ public class GamePanel extends JPanel implements Runnable {
     public final int pauseState = 2;
     public final int dialogueState = 3;
     public int gameState = playState;
-
+    public int mouseX, mouseY;
+    public boolean mouseClicked = false;
     public int currentNPC = -1;
 
     // -------------------- CONSTRUCTOR --------------------
@@ -62,22 +65,44 @@ public class GamePanel extends JPanel implements Runnable {
         this.addKeyListener(keyH);
         this.setFocusable(true);
 
-        // Initialize popup (loads Intro1.png)
+        // Initial popup on startup
         popup = new Popup(screenWidth, screenHeight, "/MurderRoomMaps/Intro1.png");
 
-        // MOUSE LISTENERS FOR POPUP
+        // -------------------- FIXED MOUSE LISTENER --------------------
         MouseInputAdapter mouseHandler = new MouseInputAdapter() {
             @Override
             public void mousePressed(java.awt.event.MouseEvent e) {
-                if (popup != null) {
-                    popup.handleClick(e.getX(), e.getY());
-                }
-            }
 
-            @Override
-            public void mouseMoved(java.awt.event.MouseEvent e) {
+                // Save click
+                mouseX = e.getX();
+                mouseY = e.getY();
+                mouseClicked = true;
+
+                // Popup handle
                 if (popup != null) {
-                    popup.handleHover(e.getX(), e.getY());
+                    popup.handleClick(mouseX, mouseY);
+                }
+
+                // Click detection for items in "items" package
+                for (int i = 0; i < obj.length; i++) {
+                    SuperObject o = obj[i];
+
+                    if (o != null) {
+                        Package p = o.getClass().getPackage();
+                        if (p != null && "items".equals(p.getName())) {
+
+                            int objScreenX = o.worldX - player.worldX + player.screenX;
+                            int objScreenY = o.worldY - player.worldY + player.screenY;
+
+                            if (mouseX >= objScreenX && mouseX <= objScreenX + o.width &&
+                                mouseY >= objScreenY && mouseY <= objScreenY + o.height) {
+
+                                obj[i] = null;  // pick up item
+                                repaint();
+                                break;
+                            }
+                        }
+                    }
                 }
             }
         };
@@ -116,6 +141,7 @@ public class GamePanel extends JPanel implements Runnable {
 
                 Thread.sleep((long) remainingTime);
                 nextDrawTime += drawInterval;
+
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -125,14 +151,15 @@ public class GamePanel extends JPanel implements Runnable {
     // -------------------- UPDATE --------------------
     public void update() {
 
-        // Update popup FIRST
+        // Update popup first
         if (popup != null) {
             popup.update();
         }
 
-        // Game updates
+        // Game logic
         if (gameState == playState) {
             player.update();
+            eHandler.checkEvent();
 
             for (int i = 0; i < npc.length; i++) {
                 if (npc[i] != null) npc[i].update();
@@ -146,26 +173,26 @@ public class GamePanel extends JPanel implements Runnable {
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
 
-        // Draw tiles
+        // Tiles
         tileM.draw(g2);
 
-        // Draw objects
+        // Objects
         for (SuperObject o : obj) {
             if (o != null) o.Draw(g2, this);
         }
 
-        // Draw NPCs
+        // NPCs
         for (Entity n : npc) {
             if (n != null) n.draw(g2);
         }
 
-        // Draw player
+        // Player
         player.draw(g2);
 
-        // Draw UI
-        ui.draw(g2);
+        // HUD/UI
+        hudUI.draw(g2);
 
-        // -------------------- DRAW POPUP LAST --------------------
+        // Popup drawn last
         if (popup != null) {
             popup.draw(g2);
         }

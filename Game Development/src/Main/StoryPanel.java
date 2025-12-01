@@ -29,13 +29,15 @@ public class StoryPanel extends JPanel implements ActionListener, KeyListener {
         this.window = window;
 
         // LOAD IMAGES
-        images = new Image[5];
+        images = new Image[7 ];
         try {
             images[0] = ImageIO.read(getClass().getClassLoader().getResource("MurderRoomMaps/story1.png"));
             images[1] = ImageIO.read(getClass().getClassLoader().getResource("MurderRoomMaps/story2.png"));
             images[2] = ImageIO.read(getClass().getClassLoader().getResource("MurderRoomMaps/story4.png"));
             images[3] = ImageIO.read(getClass().getClassLoader().getResource("MurderRoomMaps/story3.png"));
             images[4] = ImageIO.read(getClass().getClassLoader().getResource("MurderRoomMaps/story5.png"));
+            images[5] = ImageIO.read(getClass().getClassLoader().getResource("MurderRoomMaps/Insert1.png"));
+            images[6] = ImageIO.read(getClass().getClassLoader().getResource("MurderRoomMaps/Insert2.png"));
         } catch (IOException e) {
             System.out.println("Story images not found!");
         }
@@ -47,6 +49,8 @@ public class StoryPanel extends JPanel implements ActionListener, KeyListener {
         storyQueue.add("On the night of the 24th of November, the lifeless body of the maintenance worker was discovered in Room 404. Panic spread throughout the building, but it was already too late—the doors had been locked. Only five people were in the dormitory that night: You, as the investigator, John, Mark, Joy, and Mae.");
         storyQueue.add("Each claims to be innocent… but one of them is lying. Your job is clear: explore the apartment, gather clues, and use logic to uncover who the killer is. Be careful—one wrong move, and you may become the next victim...");
         storyQueue.add("Press Enter to Continue.");
+        storyQueue.add("Charles: I wonder what that noise I heard last night from room 404 was.");
+        storyQueue.add("Charles: I think I should go there and check the room.");
 
         currentStory = storyQueue.poll();
 
@@ -90,7 +94,7 @@ public class StoryPanel extends JPanel implements ActionListener, KeyListener {
         drawWrappedText(g2, currentText, 60, getHeight() - 140, getWidth() - 120);
 
         if (index < 4) {
-            String skipText = "Press ENTER to skip.";
+            String skipText = "Press ENTER to skip, or SPACE to skip the whole story.";
             g2.setFont(new Font("Serif", Font.PLAIN, 18));
             FontMetrics fm = g2.getFontMetrics();
             int skipX = getWidth() - fm.stringWidth(skipText) - 60;
@@ -135,6 +139,9 @@ public class StoryPanel extends JPanel implements ActionListener, KeyListener {
             } else {
                 nextStory();
             }
+        }
+        if (e.getKeyCode() == KeyEvent.VK_SPACE) {
+            startGame(); // skip everything and start the game
         }
     }
 

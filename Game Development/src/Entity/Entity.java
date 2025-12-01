@@ -28,6 +28,10 @@ public class Entity {
     public int actionLockCounter = 0;
     String dialogues[] = new String[30];
     int dialogueIndex = 0;
+    
+    //CHARACTER STATUS
+    public int maxLife;
+    public int life;
 
     public Entity(GamePanel gp) {
     	this.gp = gp;
@@ -39,7 +43,7 @@ public class Entity {
     	 if(dialogues[dialogueIndex] == null) {
 			 dialogueIndex = 0;
 		 }
-		 gp.ui.currentDialogue = dialogues[dialogueIndex];
+		 gp.hudUI.currentDialogue = dialogues[dialogueIndex];
 		 dialogueIndex++;
 		 
 		 switch(gp.player.direction) {

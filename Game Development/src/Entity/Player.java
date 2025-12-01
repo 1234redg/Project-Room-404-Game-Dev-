@@ -40,10 +40,14 @@ public class Player extends Entity {
 
     // Player starting location and speed
     public void setDefaultValues() {
-        worldX = gp.tileSize * 38;
-        worldY = gp.tileSize * 21;
+        worldX = gp.tileSize * 5;
+        worldY = gp.tileSize * 70;
         speed = 10;
         direction = "down";
+        
+        //Player status
+        maxLife = 3;
+        life = maxLife;
     }
 
     // Load all player sprites
