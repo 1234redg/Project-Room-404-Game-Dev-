@@ -22,7 +22,7 @@ public class Entity {
     public int spriteCounter = 0; // counts frames for switching sprites
     public int spriteNum = 1;     // chooses which sprite frame to show
 
-    public Rectangle solidArea = new Rectangle(0,0,48,48);
+    public Rectangle solidArea = new Rectangle(0,0,30,30);
     public int solidAreaDefaultX, solidAreaDefaultY;
     public boolean collisionOn = false;
     public int actionLockCounter = 0;

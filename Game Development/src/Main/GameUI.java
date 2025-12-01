@@ -78,43 +78,7 @@ public class GameUI {
     		}
     		
     }
-    /*public void drawInventory() {
-    	
-    	//FRAME
-    	int frameX = gp.tileSize*25;
-    	int frameY = gp.tileSize-10;
-    	int frameWidth = gp.tileSize*6;
-    	int frameHeight = gp.tileSize*5;
-        drawSubWindow(frameX, frameY, frameWidth, frameHeight);
-        
-        //SLOT
-        final int slotXstart = frameX + 20;
-        final int slotYstart = frameY + 20;
-        int slotX = slotXstart;
-        int slotY = slotYstart;
-        
-        //CURSER
-        int cursorX = slotXstart + (gp.tileSize * slotCol);
-        int cursorY = slotYstart + (gp.tileSize * slotRow);
-        int cursorWidth = gp.tileSize;
-        int cursorHeight = gp.tileSize;
-        
-        //DRAW CURSER
-        //g2.setColor(Color.white);
-        //g2.setStroke(new BasicStroke(3));
-        //g2.drawRoundRect(cursorX, cursorY, cursorWidth, cursorHeight, 10, 10);
-        
-    }*/
-    
-    /*public void drawSubWindow(int x, int y, int width, int height) {
-    		Color c = new Color(0,0,0,200);
-    		g2.setColor(c);
-    		g2.fillRoundRect(x, y, width, height, 35, 35);
-    		c = new Color(128,0,0);
-    		g2.setColor(c);
-    		g2.setStroke(new BasicStroke(5));
-    		g2.drawRoundRect(x+5, y+5, width-10, height-10, 25, 25);
-    }*/
+
     public int getXforCenteredText(String text) {
     	
     	int length = (int)g2.getFontMetrics().getStringBounds(text,g2).getWidth();
