@@ -31,6 +31,24 @@ public class SuperObject {
         solidArea = new Rectangle(0, 0, width, height);
     }
 
+    // Method to set custom hitbox
+    public void setHitbox(int x, int y, int w, int h) {
+        solidArea = new Rectangle(x, y, w, h);
+        solidAreaDefaultX = x;
+        solidAreaDefaultY = y;
+    }
+    
+    // Auto-adjust hitbox based on current width and height (call after setting width/height)
+    public void autoAdjustHitbox() {
+        int margin = 2;  // 2 pixel margin from edges
+        int hitboxX = margin;
+        int hitboxY = margin;
+        int hitboxWidth = Math.max(width - (margin * 2), 1);
+        int hitboxHeight = Math.max(height - (margin * 2), 1);
+        
+        setHitbox(hitboxX, hitboxY, hitboxWidth, hitboxHeight);
+    }
+
     public void Draw(Graphics2D g2, GamePanel gp) {
 
         int screenX = worldX - gp.player.worldX + gp.player.screenX;

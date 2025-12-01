@@ -55,6 +55,7 @@ public class GamePanel extends JPanel implements Runnable {
 
     // -------------------- ITEM PICKUP --------------------
     public ItemPickupManager itemPickupManager;
+    public QuestManager questManager;
 
     // -------------------- POPUP --------------------
     public Popup popup;
@@ -91,6 +92,16 @@ public class GamePanel extends JPanel implements Runnable {
 
         // Initialize ItemPickupManager
         itemPickupManager = new ItemPickupManager(obj, player);
+
+        // Initialize QuestManager and register sample quests
+        questManager = new QuestManager();
+        questManager.registerQuest(new Quest("quest_key", "Find Key", "key", 1, false));
+        questManager.registerQuest(new Quest("quest_gun", "Find Gun", "Gun", 1, false));
+        questManager.registerQuest(new Quest("quest_knife", "Find Knife", "Knife", 2, false));
+        questManager.registerQuest(new Quest("quest_handcuffs", "Find Handcuffs", "Handcuffs", 1, false));
+        questManager.registerQuest(new Quest("quest_flashlight", "Find flashlight", "flashlight", 1, false));
+        questManager.registerQuest(new Quest("quest_watch", "Find watch", "watch", 3, false));
+        questManager.registerQuest(new Quest("quest_Notebook", "Find Notebook", "Notebook", 1, false));
 
         // Initialize Popup
         popup = new Popup(screenWidth, screenHeight, "/MurderRoomMaps/Intro1.png");
@@ -148,6 +159,11 @@ public class GamePanel extends JPanel implements Runnable {
                 if (pickedItem != null) {
                     popupText = "You picked up a " + pickedItem + ".";
                     popupStartTime = System.currentTimeMillis();
+                    // Update quest progress when item picked
+                    if (questManager != null) {
+                        questManager.onItemPicked(pickedItem);
+                        System.out.println("Quest system: Item picked - " + pickedItem);
+                    }
                     repaint();
                 }
             }
@@ -248,6 +264,9 @@ public class GamePanel extends JPanel implements Runnable {
 
         // ClueTrackerUI
         if (clueTrackerUI != null) clueTrackerUI.draw(g2);
+
+        // Quest Window
+        if (questManager != null) questManager.draw(g2, this);
 
         // Bag HUD
         if (gpBag != null) gpBag.draw(g2);

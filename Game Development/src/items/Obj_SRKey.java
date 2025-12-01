@@ -5,7 +5,6 @@ import java.io.IOException;
 import javax.imageio.ImageIO;
 
 import object.SuperObject;
-import java.awt.Rectangle;
 
 public class Obj_SRKey extends SuperObject {
     
@@ -24,6 +23,9 @@ public class Obj_SRKey extends SuperObject {
 	    
         offsetX = -13;   // move 8 pixels left
         offsetY = 0;    // keep vertical position
+        
+        // Auto-adjust hitbox based on width and height
+        autoAdjustHitbox();
 	}
 
 }

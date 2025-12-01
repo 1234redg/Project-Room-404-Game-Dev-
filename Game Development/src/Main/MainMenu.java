@@ -15,11 +15,11 @@ public class MainMenu extends JPanel {
     private JButton exitButton;
 
     private int startX = 118;
-    private int startY = 450;
+    private int startY = 500;
     private int aboutX = 118;
-    private int aboutY = 560;
+    private int aboutY = 620;
     private int exitX = 118;
-    private int exitY = 690;
+    private int exitY = 750;
     private int buttonWidth = 260;
     private int buttonHeight = 75;
 

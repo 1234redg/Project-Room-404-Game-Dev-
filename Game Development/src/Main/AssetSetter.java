@@ -96,18 +96,16 @@ public void setObjects() {
     createObject(54, new Obj_Table5(), 29, 69, defaultMargin);
     createObject(55, new Obj_Table6(), 35, 74, defaultMargin);
     createObject(56, new Obj_cab(), 23, 62, defaultMargin);
-//<<<<<<< HEAD
-//=======
+ 
     createObject(56, new Obj_storagetable(), 48, 8, defaultMargin);
     createObject(57, new Obj_Fkitchentable(), 8, 56, defaultMargin);
-//>>>>>>> branch 'Main' of https://github.com/1234redg/Project-Room-404-Game-Dev-.git
-    
+     
     //Wooden Signs
     createObject(58, new Obj_NurseWoodenSign(), 23, 30, defaultMargin);
     createObject(59, new Obj_TeacherWoodenSign(), 37, 25, defaultMargin);
     createObject(60, new Obj_DoctorWoodenSign(), 1, 25, defaultMargin);
     createObject(61, new Obj_PoliceWoodenSign(), 7, 30, defaultMargin);
-    createObject(62, new Obj_PWoodenSign(), 15, 42, defaultMargin);
+    createObject(62, new Obj_PWoodenSign(), 15,     42, defaultMargin);
     createObject(63, new Obj_VictimWoodenSign(), 20, 49, defaultMargin);
     createObject(64, new Obj_VacantRoomWoodenSign(), 45, 25, defaultMargin);
     createObject(65, new Obj_StorageWoodenSign(), 33, 4, defaultMargin);
@@ -116,6 +114,12 @@ public void setObjects() {
      
     createObject(68, new Obj_SRKey(), 2, 70, 0);
     createObject(69, new Obj_Knife(), 2, 73, 0);
+    createObject(70, new Obj_Paper(), 12, 38, 0);
+    createObject(71, new Obj_Gun(), 8, 47, 0);
+    createObject(72, new Obj_Handcuffs(), 46, 18, 0);
+    createObject(73, new Obj_Flashlight(), 50, 8, 0);
+    createObject(74, new Obj_Notebook(), 6, 17, 0);
+    createObject(75, new Obj_Watch(), 39, 35, 0);
 
      
 }

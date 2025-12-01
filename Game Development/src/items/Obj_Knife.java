@@ -25,5 +25,8 @@ public class Obj_Knife extends SuperObject {
 	    
         offsetX = -13;   // move 8 pixels left
         offsetY = 0;    // keep vertical position
+        
+        // Auto-adjust hitbox based on width and height
+        autoAdjustHitbox();
 	}
 }
