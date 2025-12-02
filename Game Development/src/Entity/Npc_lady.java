@@ -75,5 +75,22 @@ public void speak() {
     }
 }
 
+@Override
+public void onEnterPressed() {
+	// Advance to next dialogue and show it
+	if (dialogueIndex < dialogues.length) {
+		if (!clueGiven[dialogueIndex]) {
+			ClueTracker.getInstance().addClue(clues[dialogueIndex]);
+			clueGiven[dialogueIndex] = true;
+		}
+		gp.ui.showMessage(dialogues[dialogueIndex]);
+		dialogueIndex++;
+	} else {
+		// Dialogue sequence finished - exit dialogue state
+		gp.gameState = gp.playState;
+		gp.currentNPC = -1;
+		dialogueIndex = 0;
+	}
+}
 
 }

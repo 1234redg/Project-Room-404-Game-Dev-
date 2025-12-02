@@ -163,7 +163,9 @@ public class Player extends Entity {
     		 
     		if(gp.keyH.enterPressed == true) {
     			 gp.gameState = gp.dialogueState;
-        		 gp.npc[i].speak();
+    			 gp.currentNPC = i;  // Store current NPC index
+    			 gp.npc[i].dialogueIndex = 0;  // Reset dialogue index
+        		 gp.npc[i].speak();  // Show first dialogue
     		}
     		
     		

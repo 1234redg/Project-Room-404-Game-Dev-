@@ -25,7 +25,7 @@ public class ClueTracker {
     private Map<String, String> assignedProfession;
 
     // Default professions used by the tracker/UI
-    private final List<String> professions = Arrays.asList("Teacher", " Guard", "Doctor", "Nurse");
+    private final List<String> professions = Arrays.asList("Teacher", " Guard", "Doctor", "Nurse", "Murderer");
     
     private ClueTracker() {
         clues = new ArrayList<>();

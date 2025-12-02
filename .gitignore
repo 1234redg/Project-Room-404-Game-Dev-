@@ -1,1 +1,6 @@
 /target/
+/bin/
+*.class
+*.classpath
+*.project
+.vscode/

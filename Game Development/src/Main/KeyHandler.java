@@ -71,9 +71,14 @@ public class KeyHandler implements KeyListener {
 	        }
         	
         	// dialogue state
-        	else if(gp.gameState == gp.dialogueState);
-        	if(code == KeyEvent.VK_ENTER) {
-        		gp.gameState = gp.playState;
+        	if(gp.gameState == gp.dialogueState) {
+        		if(code == KeyEvent.VK_ENTER) {
+        			// Call ENTER handler on current NPC
+        			if(gp.currentNPC >= 0 && gp.npc[gp.currentNPC] != null) {
+        				gp.npc[gp.currentNPC].onEnterPressed();
+        			}
+        			enterPressed = false;
+        		}
         	}
     }
 

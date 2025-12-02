@@ -23,7 +23,7 @@ public class ClueTrackerUI extends JPanel {
     private static final int CELL_HEIGHT = 30;
     private static final int CHECKBOX_SIZE = 20;
     private static final int CLUE_SECTION_HEIGHT = 150;
-    private static final int NAME_COL_WIDTH = 150;
+    private static final int NAME_COL_WIDTH = 120;
     private static final int HEADER_HEIGHT = 30;
     
     public ClueTrackerUI(GamePanel gamePanel) {
@@ -61,7 +61,7 @@ public class ClueTrackerUI extends JPanel {
         int screenHeight = gamePanel.getHeight();
 
         // Panel dimensions (centered, with margins)
-        int panelWidth = Math.min(600, screenWidth - 40);
+        int panelWidth = Math.min(800, screenWidth - 40);
         int panelHeight = Math.min(500, screenHeight - 40);
         int panelX = (screenWidth - panelWidth) / 2;
         int panelY = (screenHeight - panelHeight) / 2;
@@ -176,7 +176,7 @@ public class ClueTrackerUI extends JPanel {
     public boolean handleClick(int clickX, int clickY) {
         int screenWidth = gamePanel.getWidth();
         int screenHeight = gamePanel.getHeight();
-        int panelWidth = Math.min(600, screenWidth - 40);
+        int panelWidth = Math.min(800, screenWidth - 40);
         int panelHeight = Math.min(500, screenHeight - 40);
         int panelX = (screenWidth - panelWidth) / 2;
         int panelY = (screenHeight - panelHeight) / 2;
@@ -189,6 +189,9 @@ public class ClueTrackerUI extends JPanel {
         List<String> professions = tracker.getProfessions();
         int remaining = tableWidth - nameColWidth;
         int colWidth = professions.isEmpty() ? remaining : (remaining / professions.size());
+        
+        // Debug output
+        System.out.println("Click at (" + clickX + ", " + clickY + ") - Panel: " + panelX + "," + panelY + " (" + panelWidth + "x" + panelHeight + ")");
 
         List<String> npcNames = tracker.getNPCNames();
 
@@ -202,6 +205,7 @@ public class ClueTrackerUI extends JPanel {
                 int cy = rowY + (CELL_HEIGHT - CHECKBOX_SIZE) / 2;
                 if (clickX >= cx && clickX <= cx + CHECKBOX_SIZE && clickY >= cy && clickY <= cy + CHECKBOX_SIZE) {
                     String prof = professions.get(c);
+                    System.out.println("Checkbox clicked for NPC: " + npcName + ", Profession: " + prof);
                     tracker.toggleRuledOut(npcName, prof);
                     gamePanel.repaint();
                     return true;

@@ -108,6 +108,21 @@ public class Entity {
     		}
     }
     
+    // Called when player presses ENTER during dialogue
+    public void onEnterPressed() {
+    	// Default: advance to next dialogue
+    	dialogueIndex++;
+    	if(dialogueIndex >= dialogues.length || dialogues[dialogueIndex] == null) {
+    		// Dialogue sequence finished - exit dialogue state
+    		gp.gameState = gp.playState;
+    		gp.currentNPC = -1;
+    		dialogueIndex = 0;
+    	} else {
+    		// Show next dialogue
+    		gp.ui.showMessage(dialogues[dialogueIndex]);
+    	}
+    }
+    
     public void draw(Graphics2D g2) {
     	BufferedImage image = null;
     	 int screenX = worldX - gp.player.worldX + gp.player.screenX;

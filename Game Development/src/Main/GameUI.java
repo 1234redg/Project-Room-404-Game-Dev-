@@ -66,17 +66,31 @@ public class GameUI {
     		int width = gp.screenWidth - 100;
     		int height =  100;
     		
-    		//drawSubWindow( x, y, width,height);
+    		drawSubWindow(x, y, width, height);
     		
     		g2.setFont(g2.getFont().deriveFont(Font.PLAIN, 20F));
+
+			g2.setColor(Color.white);
+
     		x += gp.tileSize;
     		y += gp.tileSize;
     		
     		for(String line : currentDialogue.split("\n")) {
-    			g2.drawString(line, x,y);
+    			g2.drawString(line, x, y);
     			y += 40;
     		}
     		
+    }
+    
+    public void drawSubWindow(int x, int y, int width, int height) {
+    	Color c = new Color(0, 0, 0, 100);
+    	g2.setColor(c);
+    	g2.fillRoundRect(x, y, width, height, 35, 35);
+    	
+    	c = new Color(101, 67, 33);
+    	g2.setColor(c);
+    	g2.setStroke(new BasicStroke(5));
+    	g2.drawRoundRect(x, y, width, height, 35, 35);
     }
 
     public int getXforCenteredText(String text) {
