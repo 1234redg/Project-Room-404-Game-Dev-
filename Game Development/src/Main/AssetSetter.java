@@ -113,13 +113,15 @@ public void setObjects() {
     createObject(67, new Obj_KitchenStorageWoodenSign(), 9, 62, defaultMargin);
      
     createObject(68, new Obj_SRKey(), 2, 70, 0);
-    createObject(69, new Obj_Knife(), 2, 73, 0);
+    createObject(69, new Obj_Knife(), 30, 68, 0);
     createObject(70, new Obj_Paper(), 12, 38, 0);
     createObject(71, new Obj_Gun(), 8, 47, 0);
     createObject(72, new Obj_Handcuffs(), 46, 18, 0);
     createObject(73, new Obj_Flashlight(), 50, 8, 0);
     createObject(74, new Obj_Notebook(), 6, 17, 0);
     createObject(75, new Obj_Watch(), 39, 35, 0);
+
+    createObject(76, new Obj_Deadbody(), 30, 68, 0);
 
      
 }
