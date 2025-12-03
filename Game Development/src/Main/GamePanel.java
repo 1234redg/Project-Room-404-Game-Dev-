@@ -140,14 +140,14 @@ public class GamePanel extends JPanel implements Runnable {
 
                 // Check Investigate HUD click (opens/closes Clue Tracker)
                 if (hudInvestigate != null && hudInvestigate.isClicked(mouseX, mouseY)) {
-                    // hudInvestigate toggles clueTrackerUI visibility internally
                     repaint();
                     return; // stop further actions so click doesn't fall through
                 }
 
                 // ClueTrackerUI click (only if visible)
                 if (clueTrackerUI != null && clueTrackerUI.isVisible()) {
-                    boolean handled = clueTrackerUI.handleClick(mouseX, mouseY);
+                    boolean shiftHeld = (e.getModifiersEx() & java.awt.event.InputEvent.SHIFT_DOWN_MASK) != 0;
+                    boolean handled = clueTrackerUI.handleClick(mouseX, mouseY, shiftHeld);
                     if (handled) return;
                 }
 
@@ -258,6 +258,7 @@ public class GamePanel extends JPanel implements Runnable {
 
         // HUD/UI
         if (hudUI != null) hudUI.draw(g2);
+        if (gpBag != null) gpBag.draw(g2);
         if (hudObjectives != null) hudObjectives.draw(g2); // ✅ Draw Objectives popup
         if (hudInvestigate != null) hudInvestigate.draw(g2); // ✅ Draw Investigate HUD (clickable)
         if (ui != null) ui.draw(g2);
@@ -269,8 +270,6 @@ public class GamePanel extends JPanel implements Runnable {
         if (questManager != null) questManager.draw(g2, this);
 
         // Bag HUD
-        if (gpBag != null) gpBag.draw(g2);
-
         // Popup (draw last)
         if (popup != null) popup.draw(g2);
 

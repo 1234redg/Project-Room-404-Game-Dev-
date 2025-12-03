@@ -16,7 +16,7 @@ public class HUDManager {
 
     public HUDManager(GamePanel gp) {
         // Initialize all HUD components 
-        heartHUD = new HUDheart(gp);
+        //heartHUD = new HUDheart(gp);
         profileHUD = new HUD(gp);
         bagHUD = new HUDBag(gp);
         objectivesHUD = new HUDObjectives(gp);
@@ -26,7 +26,7 @@ public class HUDManager {
 
     // Called every frame by your game loop
     public void update() {
-        heartHUD.update();
+        //heartHUD.update();
         profileHUD.update();
         bagHUD.update();
         objectivesHUD.update();
@@ -37,7 +37,7 @@ public class HUDManager {
     @SuppressWarnings("static-access")
     public void draw(Graphics2D g2) {
         // Draw HUD layers in proper order
-        heartHUD.draw(g2);              
+        //heartHUD.draw(g2);              
         profileHUD.draw(g2);            
         bagHUD.draw(g2);                
         objectivesHUD.draw(g2);

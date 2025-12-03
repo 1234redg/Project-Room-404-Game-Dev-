@@ -10,7 +10,7 @@ public class Obj_SRKey extends SuperObject {
     
     public Obj_SRKey() {
 
-        name = "key";
+        name = "Key";
         try {
 	        image = ImageIO.read(getClass().getResourceAsStream("/objects/key.png"));
 	    } catch (IOException e) {
