@@ -13,7 +13,7 @@ public class HUDInvestigate {
 
     // You can adjust these values to move the HUD
     private int x = 727;
-    private int y = 667;
+    private int y = 740;
     private int size = 80;
     
     public HUDInvestigate(GamePanel gp) {

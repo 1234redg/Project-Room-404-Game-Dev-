@@ -17,6 +17,10 @@ public class ClueTrackerUI extends JPanel {
     private Image resultImage = null;
     private boolean showResultImage = false;
 
+    // Button rectangles for result image overlay
+    private Rectangle backToMenuButton;
+    private Rectangle exitButton;
+
     public Color bgColor = new Color(239, 228, 176);
     public Color textColor = new Color(0, 0, 0);
     public Color headerColor = new Color(165, 42, 42);
@@ -175,7 +179,7 @@ public class ClueTrackerUI extends JPanel {
         // ===== WIN/LOSS POPUP IMAGE OVERLAY =====
         if (showResultImage && resultImage != null) {
             // Gray transparent background
-            g2.setColor(new Color(40, 40, 40, 180));
+            g2.setColor(new Color(40, 40, 40, 70));
             g2.fillRect(0, 0, gamePanel.getWidth(), gamePanel.getHeight());
 
             int imageWidth = resultImage.getWidth(null);
@@ -183,12 +187,70 @@ public class ClueTrackerUI extends JPanel {
             int x = (gamePanel.getWidth() - imageWidth) / 2;
             int y = (gamePanel.getHeight() - imageHeight) / 2;
             g2.drawImage(resultImage, x, y, null);
+
+           // Draw buttons centered on the result image
+int buttonWidth = 300;
+int buttonHeight = 80;
+int gap = 5; // vertical space between buttons
+
+// INDIVIDUAL BUTTON UP/DOWN MOVEMENT
+int backOffsetY = 80;    // negative = up, positive = down
+int exitOffsetY = 150;     // negative = up, positive = down
+
+// Base centered position for top button
+int centerButtonX = x + (imageWidth - buttonWidth) / 2;
+int centerButtonY = y + (imageHeight - (buttonHeight * 2 + gap)) / 2;
+
+// Back to Menu (TOP button)
+int backButtonX = centerButtonX;
+int backButtonY = centerButtonY + backOffsetY;
+backToMenuButton = new Rectangle(backButtonX, backButtonY, buttonWidth, buttonHeight);
+
+// Exit Game (BOTTOM button)
+int exitButtonX = centerButtonX;
+int exitButtonY = centerButtonY + buttonHeight + gap + exitOffsetY;
+exitButton = new Rectangle(exitButtonX, exitButtonY, buttonWidth, buttonHeight);
+
+// Draw buttons
+drawButton(g2, backToMenuButton, "");
+drawButton(g2, exitButton, "");
+
         }
     }
 
+    private void drawButton(Graphics2D g2, Rectangle button, String text) {
+        // Button fill
+        g2.setColor(new Color(100, 100, 100, 10));
+        g2.fillRect(button.x, button.y, button.width, button.height);
+
+        // Button border
+        
+        g2.setStroke(new BasicStroke(2));
+        g2.drawRect(button.x, button.y, button.width, button.height);
+
+        // Button text
+        g2.setColor(Color.WHITE);
+        g2.setFont(new Font("Arial", Font.BOLD, 16));
+        FontMetrics fm = g2.getFontMetrics();
+        int textX = button.x + (button.width - fm.stringWidth(text)) / 2;
+        int textY = button.y + ((button.height - fm.getHeight()) / 2) + fm.getAscent();
+        g2.drawString(text, textX, textY);
+    }
+
     public boolean handleClick(int clickX, int clickY, boolean shiftHeld) {
-        // If result image showing, dismiss it on any click
+        // If result image showing, check button clicks
         if (showResultImage) {
+            // Check if "Back to Main Menu" button clicked
+            if (backToMenuButton != null && backToMenuButton.contains(clickX, clickY)) {
+                goBackToMainMenu();
+                return true;
+            }
+            // Check if "Exit Game" button clicked
+            if (exitButton != null && exitButton.contains(clickX, clickY)) {
+                System.exit(0);
+                return true;
+            }
+            // Any other click dismisses the image
             clearResultImage();
             gamePanel.repaint();
             return true;
@@ -309,5 +371,24 @@ public class ClueTrackerUI extends JPanel {
         showFeedback = false;
         feedbackMessage = "";
         gamePanel.repaint();
+    }
+
+    private void goBackToMainMenu() {
+        // Stop the game thread in GamePanel
+        if (gamePanel.gameThread != null && gamePanel.gameThread.isAlive()) {
+            try {
+                // Give the thread time to finish
+                gamePanel.gameThread.interrupt();
+                gamePanel.gameThread.join(1000);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+
+        // Switch back to main menu
+        MainMenu mainMenu = new MainMenu(Main.window);
+        Main.window.setContentPane(mainMenu);
+        Main.window.revalidate();
+        mainMenu.requestFocusInWindow();
     }
 }

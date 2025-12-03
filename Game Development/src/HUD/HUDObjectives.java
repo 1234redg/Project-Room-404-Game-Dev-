@@ -15,7 +15,7 @@ public class HUDObjectives {
 
     // HUD position and size
     private int x = 1200;
-    private int y = 678;
+    private int y = 740;
     private int size = 80;
 
     // Popup size (adjust here to make it smaller/larger)
